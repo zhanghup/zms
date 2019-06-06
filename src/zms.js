@@ -1,11 +1,11 @@
 
-import Vant, {Locale} from 'vant'
-import zhCN from 'vant/lib/locale/lang/zh-CN'
-import axios from 'axios'
+import Vant from 'vant'
+import 'vant/lib/index.css'
+// import zhCN from 'vant/lib/locale/lang/zh-CN'
 
-import '../themes/fonts/iconfont'
+// import '../themes/fonts/iconfont'
 
-Locale.use('zh-CN', zhCN)
+// Locale.use('zh-CN', zhCN)
 
 const components = [
 ]
@@ -16,8 +16,6 @@ const install = function (Vue) {
   components.map(component => {
     Vue.component(component.name, component)
   })
-
-  Vue.prototype.$ajax = axios
 }
 
 if (typeof window !== 'undefined' && window.Vue) {
@@ -25,7 +23,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  version: '0.1.0',
+  version: '0.0.1',
   install,
   ...components
 }
