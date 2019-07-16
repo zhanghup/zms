@@ -1,11 +1,6 @@
 
 import Vant from 'vant'
 import 'vant/lib/index.css'
-// import zhCN from 'vant/lib/locale/lang/zh-CN'
-
-// import '../themes/fonts/iconfont'
-
-// Locale.use('zh-CN', zhCN)
 
 const components = [
 ]
