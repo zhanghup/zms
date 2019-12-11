@@ -3,8 +3,8 @@ import Router from 'vue-router';
 
 Vue.use(Router)
 
-let router = new Router({
-  routes: []
-})
-
-export default router
+export default function (routes) {
+  return new Router({
+    routes: routes
+  })
+}
