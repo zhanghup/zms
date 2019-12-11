@@ -1,24 +1,13 @@
+import Vue from "vue";
+import Vant from "vant";
+import "vant/lib/index.css";
 
-import Vant from 'vant'
-import 'vant/lib/index.css'
+Vue.use(Vant);
 
-const components = [
-]
-
-const install = function (Vue) {
-  // 加载Vant
-  Vue.use(Vant)
-  components.map(component => {
-    Vue.component(component.name, component)
-  })
-}
-
-if (typeof window !== 'undefined' && window.Vue) {
-  install(window.Vue)
-}
+[].map(component => {
+  Vue.component(component.name, component);
+});
 
 export default {
-  version: '1.0.0',
-  install,
-  ...components
-}
+  version: "1.0.0"
+};
