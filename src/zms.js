@@ -10,7 +10,6 @@ class vue extends Vue {
   constructor(param) {
     super({
       el: "#app",
-      router: r,
       components: { App },
       template: "<App/>",
       routes: router(param.routers),
