@@ -1,27 +1,25 @@
-import Vue from "vue";
-import Vant from "vant";
-import "vant/lib/index.css";
-import router from "./router";
-import App from "./app";
+import Vue from 'vue'
+import Vant from 'vant'
+import 'vant/lib/index.css'
+import router from './router'
+import App from './app'
 
 class vue extends Vue {
-  routes = [];
-
   constructor(param) {
     super({
-      el: "#app",
+      el: '#app',
       components: { App },
-      template: "<App/>",
-      routes: router(param.routers),
+      template: '<App/>',
+      routes: router(param.routes),
       ...param
-    });
+    })
   }
 }
 
 vue.use(Vant);
 
 [].map(component => {
-  vue.component(component.name, component);
-});
+  vue.component(component.name, component)
+})
 
-export default vue;
+export default vue
