@@ -1,7 +1,7 @@
 {
-  "name": "zms",
-  "version": "1.0.0",
-  "description": "A Vue.js project",
+  "name": "zander-vant-vue",
+  "version": "1.0.2",
+  "description": "h5",
   "author": "张超 <zhang3611@qq.com>",
   "private": false,
   "main": "src/zms.js",
