@@ -3,23 +3,35 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 import router from './router'
 import App from './app'
+import axios from 'axios'
 
 class vue extends Vue {
-  constructor(param) {
+  $axios = null
+  $$settings = {}
+
+  constructor (param) {
     super({
       el: '#app',
-      components: { App },
-      template: '<App/>',
-      routes: router(param.routes),
-      ...param
+      render: h => h(App),
+      routes: router(param.myroutes),
+      ...param.vue
     })
+    this.$$settings = param
+    this.$$Init()
+  }
+
+  $$InitAxios () {
+    this.$axios = axios.create()
+  }
+
+  $$Init () {
+    this.$$initAxios()
+    if (this.$$settings.init && this.$$settings.init instanceof Function) {
+      this.$$settings.init.call(this)
+    }
   }
 }
 
-vue.use(Vant);
-
-[].map(component => {
-  vue.component(component.name, component)
-})
+vue.use(Vant)
 
 export default vue
