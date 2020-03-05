@@ -1,24 +1,48 @@
 # zander-vue-vant
 
-## Project setup
-```
-yarn install
+## 开始
+
+* routes.js
+```js
+
+export default [
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('../views/Home.vue')
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('../views/About.vue')
+  }
+]
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
+* store.js
+```js
+export default {
+  state: {
+  },
+  mutations: {
+  },
+  actions: {
+  },
+  modules: {
+  }
+}
 ```
 
-### Compiles and minifies for production
-```
-yarn build
-```
+* main.js
+```js
+import Vue from 'packages/vue.js'
+import routes from './routes'
+import store from './store'
 
-### Lints and fixes files
-```
-yarn lint
-```
+new Vue({
+  routes,
+  store,
+})
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+```
