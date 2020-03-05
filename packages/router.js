@@ -12,7 +12,6 @@ export default {
       mode: 'history',
       routes: routes
     })
-    console.log(router,routes)
     return router
   }
 }
