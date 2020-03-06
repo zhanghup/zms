@@ -1,4 +1,4 @@
-class value {
+export default class value {
   // 不支持"中文","#","$"等字符作为属性名称
   // 1. key: a.b.c                     value: Object   format: time:YYYY-MM-DD
   // 2. key: a.b[0].c                  value: Object   format: time:YYYY-MM-DD
@@ -47,15 +47,14 @@ class value {
         obj = this.filter(param, obj);
       }
       // 情况4
-      else if (/^\[/.test(keys[i])) {
+      else if (keys[i].startsWith("[")) {
         let field = [];
-        do {
+        for (; !keys[i].endsWith("]"); i++) {
           field.push(keys[i]);
-          i++;
-        } while (/]$/.test(keys[i]));
-        i--;
+        }
+        field.push(keys[i]);
         let [_, param] = field.join(".").match(/^\[(.+)\]$/);
-        obj = this.filter(param, obj);
+        // obj = this.filter(param, obj);
       }
     }
     return obj;
@@ -103,5 +102,3 @@ class value {
 
   static Format(format, value) {}
 }
-
-export default value;
