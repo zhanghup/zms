@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <router-item :list="list" />
+    <router-item :list="list"></router-item>
   </div>
 </template>
 

@@ -3,11 +3,13 @@
     <div v-for="item in list" :key="item.name" class="item" @click="myrouter(item)">
       <i v-if="item.icon" class="iconfont icon-left" :class="[item.icon]"></i>
       <div class="item-content">
-        <slot>
+        <slot :item="item">
           <div>{{item.title}}</div>
         </slot>
       </div>
-      <i class="iconfont iconright icon-right"></i>
+      <slot name="icon-right" :item="item">
+        <i class="iconfont iconright icon-right"></i>
+      </slot>
     </div>
   </div>
 </template>
