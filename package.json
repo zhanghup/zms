@@ -1,7 +1,10 @@
 {
-  "name": "zander-vue-vant",
-  "version": "0.1.0",
-  "private": true,
+  "name": "zander-vant-vue",
+  "version": "1.1.0",
+  "description": "h5",
+  "author": "张超 <zhang3611@qq.com>",
+  "private": false,
+  "main": "packages/vue.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
