@@ -1,6 +1,7 @@
-import routerItem from "./routerItem/index.vue"
-
+// import routerItem from "";
+// import test from "./test/test.vue";
 
 export default {
-  "router-item": routerItem
-}
+  "router-item": import("./routerItem/index.vue"),
+  test: () => import("./test/test.vue")
+};

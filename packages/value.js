@@ -1,5 +1,5 @@
 export default class value {
-  // 不支持"中文","#","$"等字符作为属性名称
+  // 不支持 "[","]" 字符作为属性名称
   // 1. key: a.b.c                     value: Object   format: time:YYYY-MM-DD
   // 2. key: a.b[0].c                  value: Object   format: time:YYYY-MM-DD
   // 3. key: a1.b1.[d1 == 's1'].c1      value: Object   format: time:YYYY-MM-DD
@@ -16,16 +16,16 @@ export default class value {
 
     for (let i = 0; i < keys.length; i++) {
       // 情况1
-      if (/^[_0-9a-zA-Z]+$/.test(keys[i])) {
-        obj = obj[keys[i]];
+      if (keys[i].indexOf("[") == -1 && keys[i].indexOf("]") == -1) {
         if (obj == undefined) {
           return null;
         }
+        obj = obj[keys[i]];
       }
 
       // 情况2
       else if (/^\[(\d+)\]$/.test(keys[i])) {
-        let [_, idx] = keys[i].match(/^\[(\d+)\]$/);
+        let [, idx] = keys[i].match(/^\[(\d+)\]$/);
 
         if (obj instanceof Array) {
           if (idx < obj.length) {
@@ -42,9 +42,8 @@ export default class value {
       }
 
       // 情况3
-      else if (/^\[(.+)\]$/.test(keys[i])) {
-        let [_, param] = keys[i].match(/^\[(.+)\]$/);
-        obj = this.filter(param, obj);
+      else if (keys[i].startsWith("[") && keys[i].endsWith("]")) {
+        obj = this.filter(keys[i].slice(1, keys[i].length - 1), obj);
       }
       // 情况4
       else if (keys[i].startsWith("[")) {
@@ -53,8 +52,8 @@ export default class value {
           field.push(keys[i]);
         }
         field.push(keys[i]);
-        let [_, param] = field.join(".").match(/^\[(.+)\]$/);
-        // obj = this.filter(param, obj);
+        let strs = field.join(".");
+        obj = this.filter(strs.slice(1, strs.length - 1), obj);
       }
     }
     return obj;
@@ -63,26 +62,23 @@ export default class value {
   static filter(key, obj) {
     if (!(obj instanceof Array)) return null;
     let self = this;
-    let field, ope;
+    let [, left, operate, right] = key.match(/(\S+)\s?(<=|<|===|==|>=|>)\s?(\S+)/);
 
-    if (/\S+\s?<\s?\S+/.test(key)) {
-      [field, ope] = key.split("<");
-      return obj.filter(r => self.GetValue(field, r) < self.typeValue(ope));
-    } else if (/\S+\s?<=\s?\S+/.test(key)) {
-      [field, ope] = key.split("<=");
-      return obj.filter(r => self.GetValue(field, r) <= self.typeValue(ope));
-    } else if (/\S+\s?===\s?\S+/.test(key)) {
-      [field, ope] = key.split("===");
-      return obj.find(r => self.GetValue(field, r) == self.typeValue(ope));
-    } else if (/\S+\s?==\s?\S+/.test(key)) {
-      [field, ope] = key.split("==");
-      return obj.filter(r => self.GetValue(field, r) == self.typeValue(ope));
-    } else if (/\S\s?>=\s?\S+/.test(key)) {
-      [field, ope] = key.split(">=");
-      return obj.filter(r => self.GetValue(field, r) >= self.typeValue(ope));
-    } else if (/\S+\s?>\s?\S+/.test(key)) {
-      [field, ope] = key.split(">");
-      return obj.filter(r => self.GetValue(field, r) > self.typeValue(ope));
+    if (left && operate && right) {
+      switch (operate) {
+        case "<":
+          return obj.filter(r => self.GetValue(left, r) < self.typeValue(right));
+        case "<=":
+          return obj.filter(r => self.GetValue(left, r) <= self.typeValue(right));
+        case "===":
+          return obj.find(r => self.GetValue(left, r) == self.typeValue(right));
+        case "==":
+          return obj.filter(r => self.GetValue(left, r) == self.typeValue(right));
+        case ">=":
+          return obj.filter(r => self.GetValue(left, r) >= self.typeValue(right));
+        case ">":
+          return obj.filter(r => self.GetValue(left, r) > self.typeValue(right));
+      }
     }
 
     return null;
@@ -92,6 +88,8 @@ export default class value {
     if (typeof obj !== "string") return null;
     obj = obj.trim();
     if (obj == "") return null;
+    else if (obj == "undefined") return undefined;
+    else if (obj == "null") return null;
     else if (obj == "true") return true;
     else if (obj == "false") return false;
     else if (/^\d+$/.test(obj)) return parseInt(obj);
