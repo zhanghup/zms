@@ -1,13 +1,12 @@
 // import Vue from 'vue'
 import store from "./store";
-import Vue from "../packages/vue";
-import routes from "./router";
+import Vue from "zpx";
+import "./router";
 
 Vue.config.productionTip = false;
 
 // console.log(VV.config.productionTip,VV.test)
 
-Vue.initRouter(routes);
 Vue.initVuex(store);
 
 new Vue({});
