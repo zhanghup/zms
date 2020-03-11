@@ -5,5 +5,11 @@ module.exports = {
       template: "public/index.html"
     }
   },
-  productionSourceMap: process.env.NODE_ENV === "production" ? false : true
+  productionSourceMap: process.env.NODE_ENV === "production" ? false : true,
+  devServer: {
+    overlay: {
+      warnings: false,
+      errors: false
+    }
+  }
 };

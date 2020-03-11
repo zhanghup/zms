@@ -1,10 +1,13 @@
-export default class value {
+import Vue from "vue";
+
+export class value {
+  static dictmap = {};
   // 不支持 "[","]" 字符作为属性名称
   // 1. key: a.b.c                     value: Object   format: time:YYYY-MM-DD
   // 2. key: a.b[0].c                  value: Object   format: time:YYYY-MM-DD
   // 3. key: a1.b1.[d1 == 's1'].c1      value: Object   format: time:YYYY-MM-DD
   // 4. key: a1.b1.[d1.e1 == 's1'].c1   value: Object   format: time:YYYY-MM-DD
-  static GetValue(key, obj, format) {
+  static GetValue(key, obj) {
     if (key == null) return null;
     if (typeof key !== "string") return null;
     key = key.trim();
@@ -98,5 +101,118 @@ export default class value {
     return null;
   }
 
-  static Format(format, value) {}
+  static Format(format, value) {
+    if (!format) return value;
+    let strs = format.split(":");
+    let opt = "";
+    if (strs.length > 1) {
+      opt = strs.slice(1).join(":");
+    }
+
+    switch (strs[0]) {
+      case "template":
+        return this.formatTemplate(opt, value);
+      case "toFixed":
+        return this.formatToFixed(opt, value);
+      case "time":
+        return this.formatTime(opt, value);
+      case "dict":
+        return this.formatDict(opt, value);
+    }
+  }
+
+  static formatTime(opt, value) {
+    if (value == null) {
+      return null;
+    }
+    let t = null;
+    if ((value + "").length == 10) {
+      t = new Date(value * 1000);
+    } else if ((value + "").length == 13) {
+      t = new Date(value);
+    } else {
+      t = new Date(value * 1000);
+    }
+
+    if (!opt) {
+      opt = "YYYY-MM-DD";
+    }
+
+    let opts = [
+      { key: /Y+/, value: t.getFullYear().toString() }, // 年
+      { key: /M+/, value: (t.getMonth() + 1).toString() }, // 月
+      { key: /D+/, value: t.getDate().toString() }, // 日
+      { key: /H+/, value: t.getHours().toString() }, // 时
+      { key: /m+/, value: t.getMinutes().toString() }, // 分
+      { key: /S+/, value: t.getSeconds().toString() } // 秒
+    ];
+
+    for (let o of opts) {
+      let match = opt.match(o.key);
+      if (!match) continue;
+      let len = match[0].length;
+      let value = o.value;
+      switch (len) {
+        case 1:
+          break;
+        case 2:
+          value = ("000" + value).slice(-2);
+          break;
+        case 3:
+          value = ("000" + value).slice(-3);
+          break;
+        case 4:
+          value = ("000" + value).slice(-4);
+          break;
+      }
+      opt = opt.replace(o.key, value);
+    }
+    return opt;
+  }
+
+  static formatDict(opt, value) {
+    if (!opt) return null;
+    let dict = this.dictmap[opt];
+    if (!dict || !dict.values) return null;
+    let o = dict.values.find(r => r.value == value);
+    return o.name;
+  }
+  /*
+    template: jfkasdlj$valuefjdaskfjaskl
+  */
+  static formatTemplate(opt, value) {
+    if (!opt) return value;
+    return opt.replace(/\$value/g, value);
+  }
+  static formatToFixed(opt, value) {
+    if (opt == undefined) {
+      opt = 0;
+    } else {
+      opt = parseInt(opt);
+    }
+    return value.toFixed(opt);
+  }
 }
+
+function GetValue(key, obj, ...format) {
+  let o = JSON.parse(JSON.stringify(obj));
+  let v = value.GetValue(key, o);
+  if (format && format.length > 0) {
+    for (let f of format) {
+      v = value.Format(f, v);
+    }
+  }
+  return v;
+}
+
+function install(Vue) {
+  Object.defineProperty(Vue.prototype, "$v", {
+    get: function get() {
+      return GetValue;
+    }
+  });
+}
+
+GetValue.install = install;
+
+Vue.use(GetValue);
