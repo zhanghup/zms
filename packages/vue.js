@@ -12,25 +12,26 @@ for (let k in components) {
 }
 
 class vue extends Vue {
-  static sync = {};
-
   constructor(param) {
     vue.sync = { ...vue.sync, ..._init(param) };
     super(vue.sync);
   }
-
-  static initRouter(routes) {
-    if (!routes) return;
-    this.sync.router = fnrouter(routes);
-    return this.sync.router;
-  }
-
-  static initVuex(store) {
-    if (!store) return;
-    this.sync.store = fnstore(store);
-    return this.sync.store;
-  }
 }
+
+vue.sync = {};
+vue.initRouter = (routes) =>{
+  if (!routes) return;
+  vue.sync.router = fnrouter(routes);
+  return vue.sync.router;
+}
+
+vue.initVuex = (store)=> {
+  if (!store) return;
+  vue.sync.store = fnstore(store);
+  return vue.sync.store;
+}
+
+
 
 vue.use(Vant);
 export default vue;
