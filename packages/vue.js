@@ -16,22 +16,21 @@ class vue extends Vue {
     vue.sync = { ...vue.sync, ..._init(param) };
     super(vue.sync);
   }
+
+  static initRouter  (routes){
+    if (!routes) return;
+    vue.sync.router = fnrouter(routes);
+    return vue.sync.router;
+  }
+
+  static initVuex  (store) {
+    if (!store) return;
+    vue.sync.store = fnstore(store);
+    return vue.sync.store;
+  }
 }
 
 vue.sync = {};
-vue.initRouter = (routes) =>{
-  if (!routes) return;
-  vue.sync.router = fnrouter(routes);
-  return vue.sync.router;
-}
-
-vue.initVuex = (store)=> {
-  if (!store) return;
-  vue.sync.store = fnstore(store);
-  return vue.sync.store;
-}
-
-
 
 vue.use(Vant);
 export default vue;

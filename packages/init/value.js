@@ -1,7 +1,7 @@
 import Vue from "vue";
 
 export class value {
-  static dictmap = {};
+  
   // 不支持 "[","]" 字符作为属性名称
   // 1. key: a.b.c                     value: Object   format: time:YYYY-MM-DD
   // 2. key: a.b[0].c                  value: Object   format: time:YYYY-MM-DD
@@ -193,6 +193,7 @@ export class value {
     return value.toFixed(opt);
   }
 }
+value.dictmap = {};
 
 function GetValue(key, obj, ...format) {
   let o = JSON.parse(JSON.stringify(obj));

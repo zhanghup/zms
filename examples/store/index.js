@@ -1,4 +1,4 @@
-import Vue from "../../packages/vue";
+import Vue from "zpx";
 
 let store = {
   state: {},
