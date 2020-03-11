@@ -1,3 +1,5 @@
+import Vue from "../../packages/vue";
+
 const routes = [
   {
     path: "/",
@@ -16,4 +18,4 @@ const routes = [
   }
 ];
 
-export default routes;
+Vue.initRouter(routes);

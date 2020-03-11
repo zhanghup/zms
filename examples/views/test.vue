@@ -1,6 +1,7 @@
 <template>
   <div class="about">
     <test />
+    {{ $v("b.c", a) }}
   </div>
 </template>
 <script>
@@ -18,8 +19,6 @@ export default {
       }
     };
   },
-  created() {
-    console.log(this.$v("b.c", this.a), ":-------------", this.a);
-  }
+  created() {}
 };
 </script>

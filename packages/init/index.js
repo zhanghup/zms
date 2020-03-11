@@ -1,9 +1,9 @@
-import fnrouter from "./router.js";
-import fnstore from "./store.js";
-import App from "./App";
 import "./value";
+import "./axios";
 
-export default function({ router, vue, app, store }) {
+import App from "./app";
+
+export default function({ vue, app }) {
   return {
     el: "#app",
     render: h => {
@@ -13,8 +13,6 @@ export default function({ router, vue, app, store }) {
         return h(App);
       }
     },
-    router: fnrouter(router),
-    store: fnstore(store),
     ...vue
   };
 }

@@ -7,7 +7,7 @@ Vue.config.productionTip = false;
 
 // console.log(VV.config.productionTip,VV.test)
 
-new Vue({
-  router: routes,
-  store
-});
+Vue.initRouter(routes);
+Vue.initVuex(store);
+
+new Vue({});
