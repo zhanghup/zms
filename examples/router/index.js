@@ -1,4 +1,4 @@
-import Vue from "zpx";
+import Vue from "../../packages/vue";
 
 const routes = [
   {

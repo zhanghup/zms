@@ -1,6 +1,6 @@
 // import Vue from 'vue'
 import store from "./store";
-import Vue from "zpx";
+import Vue from "../packages/vue";
 import "./router";
 
 Vue.config.productionTip = false;
