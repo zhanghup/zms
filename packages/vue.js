@@ -17,9 +17,9 @@ class vue extends Vue {
     super(vue.sync);
   }
 
-  static initRouter  (routes){
+  static initRouter  (routes,params){
     if (!routes) return;
-    vue.sync.router = fnrouter(routes);
+    vue.sync.router = fnrouter(routes,params);
     return vue.sync.router;
   }
 

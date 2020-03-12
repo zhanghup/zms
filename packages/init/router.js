@@ -5,10 +5,11 @@ Vue.use(Router);
 
 let router = null;
 
-export default function(routes) {
+export default function(routes,params) {
   router = new Router({
     mode: "history",
-    routes: routes
+    routes: routes,
+    ...params
   });
   return router;
 }
