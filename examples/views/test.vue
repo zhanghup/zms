@@ -1,12 +1,12 @@
 <template>
   <div class="about">
-    <test />
+    <test />dddddddddd
     {{ $v("b.c", a) }}
   </div>
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       a: {
         b: {
@@ -19,6 +19,6 @@ export default {
       }
     };
   },
-  created() {}
+  created () { }
 };
 </script>

@@ -1,9 +1,9 @@
 import "./value";
 import "./axios";
 
-import App from "./app";
+import App from "./App";
 
-export default function({ vue, app }) {
+export default function ({ vue, app }) {
   return {
     el: "#app",
     render: h => {
