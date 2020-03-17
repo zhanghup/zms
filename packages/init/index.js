@@ -1,5 +1,4 @@
 import "./value";
-import "./axios";
 
 import App from "./App";
 
