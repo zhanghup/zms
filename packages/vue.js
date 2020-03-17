@@ -14,16 +14,12 @@ for (let k in components) {
 class vue extends Vue {
   constructor(param) {
     vue.sync = { ...vue.sync, ..._init(param) };
-    console.log("11111111111111111", vue.sync)
     super(vue.sync);
-    console.log("22222222222222222")
   }
 
   static initRouter (routes, params) {
     if (!routes) return;
-    console.log("---------------")
     vue.sync.router = fnrouter(routes, params);
-    console.log(vue.sync)
     return vue.sync.router;
   }
 

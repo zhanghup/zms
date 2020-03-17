@@ -1,6 +1,6 @@
 import "./value";
 
-import App from "./App";
+import App from "./app";
 
 export default function ({ vue, app }) {
   return {
