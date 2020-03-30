@@ -3,7 +3,10 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-export default function(store) {
-  let mystore = new Vuex.Store(store);
-  return mystore;
+export default function(zpx) {
+  zpx.initVuex = store => {
+    let mystore = new Vuex.Store(store);
+    zpx.settings.store = mystore;
+    return mystore;
+  };
 }

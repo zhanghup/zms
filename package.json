@@ -1,10 +1,10 @@
 {
   "name": "zpx",
-  "version": "1.1.7",
+  "version": "1.1.10",
   "description": "h5",
   "author": "张超 <zhang3611@qq.com>",
   "private": false,
-  "main": "packages/vue.js",
+  "main": "packages/zpx.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -35,7 +35,7 @@
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "vue-template-compiler": "^2.6.11",
-    "zpx": "^1.1.6"
+    "zpx": "^1.1.10"
   },
   "eslintConfig": {
     "root": true,
