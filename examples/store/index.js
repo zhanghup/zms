@@ -1,10 +1,8 @@
-import Vue from "zpx";
+import zpx from "zpx";
 
-let store = {
+zpx.initVuex({
   state: {},
   mutations: {},
   actions: {},
   modules: {}
-};
-
-Vue.initVuex(store);
+});

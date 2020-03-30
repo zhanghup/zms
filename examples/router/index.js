@@ -1,6 +1,6 @@
-import Vue from "zpx";
+import zpx from "zpx";
 
-const routes = [
+zpx.initRouter([
   {
     path: "/",
     name: "Test",
@@ -16,6 +16,4 @@ const routes = [
     name: "About",
     component: () => import("../views/About.vue")
   }
-];
-
-Vue.initRouter(routes);
+]);
