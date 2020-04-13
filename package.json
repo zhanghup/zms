@@ -1,6 +1,6 @@
 {
   "name": "zpx",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "h5",
   "author": "张超 <zhang3611@qq.com>",
   "private": false,
@@ -12,7 +12,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "vant": "^2.5.5",
     "vue": "^2.6.11",
@@ -35,7 +34,7 @@
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "vue-template-compiler": "^2.6.11",
-    "zpx": "^1.1.10"
+    "zpx": "^1.1.11"
   },
   "eslintConfig": {
     "root": true,
