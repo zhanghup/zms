@@ -1,6 +1,5 @@
 <template>
   <div class="about">
-    <test />dddddddddd
     {{ $v("b.c", a) }}
   </div>
 </template>

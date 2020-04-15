@@ -1,4 +1,4 @@
-# zander-vue-vant
+# zander-vue
 
 ## 开始
 
