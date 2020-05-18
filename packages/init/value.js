@@ -1,7 +1,6 @@
 import Vue from "vue";
 
 export class value {
-  
   // 不支持 "[","]" 字符作为属性名称
   // 1. key: a.b.c                     value: Object   format: time:YYYY-MM-DD
   // 2. key: a.b[0].c                  value: Object   format: time:YYYY-MM-DD
@@ -70,17 +69,17 @@ export class value {
     if (left && operate && right) {
       switch (operate) {
         case "<":
-          return obj.filter(r => self.GetValue(left, r) < self.typeValue(right));
+          return obj.filter((r) => self.GetValue(left, r) < self.typeValue(right));
         case "<=":
-          return obj.filter(r => self.GetValue(left, r) <= self.typeValue(right));
+          return obj.filter((r) => self.GetValue(left, r) <= self.typeValue(right));
         case "===":
-          return obj.find(r => self.GetValue(left, r) == self.typeValue(right));
+          return obj.find((r) => self.GetValue(left, r) == self.typeValue(right));
         case "==":
-          return obj.filter(r => self.GetValue(left, r) == self.typeValue(right));
+          return obj.filter((r) => self.GetValue(left, r) == self.typeValue(right));
         case ">=":
-          return obj.filter(r => self.GetValue(left, r) >= self.typeValue(right));
+          return obj.filter((r) => self.GetValue(left, r) >= self.typeValue(right));
         case ">":
-          return obj.filter(r => self.GetValue(left, r) > self.typeValue(right));
+          return obj.filter((r) => self.GetValue(left, r) > self.typeValue(right));
       }
     }
 
@@ -97,28 +96,78 @@ export class value {
     else if (obj == "false") return false;
     else if (/^\d+$/.test(obj)) return parseInt(obj);
     else if (/^\d+\.\d+$/.test(obj)) return parseFloat(obj);
-    else if (/^".*?"$|^'.*?'$|^`.*?`$/.test(obj)) return obj.slice(1, -1);
+    else if (/^".*?"$|^'.*?'$|^`.*?`$/.test(obj)) return obj.slice(1, -1); // 字符串
     return null;
   }
 
   static Format(format, value) {
     if (!format) return value;
-    let strs = format.split(":");
-    let opt = "";
-    if (strs.length > 1) {
-      opt = strs.slice(1).join(":");
-    }
 
-    switch (strs[0]) {
-      case "template":
-        return this.formatTemplate(opt, value);
-      case "toFixed":
-        return this.formatToFixed(opt, value);
-      case "time":
-        return this.formatTime(opt, value);
-      case "dict":
-        return this.formatDict(opt, value);
+    if (typeof format === "string") {
+      let strs = format.split(":");
+      let opt = "";
+      if (strs.length > 1) {
+        opt = strs.slice(1).join(":");
+      }
+
+      switch (strs[0]) {
+        case "template":
+          return this.formatTemplate(opt, value);
+        case "toFixed":
+          return this.formatToFixed(opt, value);
+        case "time":
+          return this.formatTime(opt, value);
+        case "dict":
+          return this.formatDict(opt, value);
+      }
+    } else if (format instanceof Object) {
+      return this.formatFilter(format, value);
     }
+  }
+
+  static formatFilter(opt, value) {
+    let self = this;
+    for (let key in opt) {
+      let nns = key.match(/\s?(<=|<|===|==|>=|>)\s?(\S+)/);
+      if (nns) {
+        let [, operate, right] = nns;
+        switch (operate) {
+          case "<":
+            if (value < self.typeValue(right)) {
+              return opt[key];
+            }
+            break;
+          case "<=":
+            if (value <= self.typeValue(right)) {
+              return opt[key];
+            }
+            break;
+          case "===":
+            if (value === self.typeValue(right)) {
+              return opt[key];
+            }
+            break;
+          case "==":
+            if (value == self.typeValue(right)) {
+              return opt[key];
+            }
+            break;
+          case ">=":
+            if (value >= self.typeValue(right)) {
+              return opt[key];
+            }
+            break;
+          case ">":
+            if (value > self.typeValue(right)) {
+              return opt[key];
+            }
+            break;
+        }
+      } else if (key == value) {
+        return opt[key];
+      }
+    }
+    return null;
   }
 
   static formatTime(opt, value) {
@@ -144,7 +193,7 @@ export class value {
       { key: /D+/, value: t.getDate().toString() }, // 日
       { key: /H+/, value: t.getHours().toString() }, // 时
       { key: /m+/, value: t.getMinutes().toString() }, // 分
-      { key: /S+/, value: t.getSeconds().toString() } // 秒
+      { key: /S+/, value: t.getSeconds().toString() }, // 秒
     ];
 
     for (let o of opts) {
@@ -174,7 +223,7 @@ export class value {
     if (!opt) return null;
     let dict = this.dictmap[opt];
     if (!dict || !dict.values) return null;
-    let o = dict.values.find(r => r.value == value);
+    let o = dict.values.find((r) => r.value == value);
     return o.name;
   }
   /*
@@ -193,8 +242,10 @@ export class value {
     return value.toFixed(opt);
   }
 }
+
 value.dictmap = {};
 
+// GetValue
 function GetValue(key, obj, ...format) {
   let o = JSON.parse(JSON.stringify(obj));
   let v = value.GetValue(key, o);
@@ -205,15 +256,31 @@ function GetValue(key, obj, ...format) {
   }
   return v;
 }
-
-function install(Vue) {
+GetValue.install = function (Vue) {
   Object.defineProperty(Vue.prototype, "$v", {
     get: function get() {
       return GetValue;
-    }
+    },
   });
-}
-
-GetValue.install = install;
-
+};
 Vue.use(GetValue);
+
+// GetFormat
+function GetFormat(v, ...format) {
+  if (format && format.length > 0) {
+    for (let f of format) {
+      v = value.Format(f, v);
+    }
+  }
+  return v;
+}
+GetFormat.install = function (Vue) {
+  Object.defineProperty(Vue.prototype, "$f", {
+    get: function get() {
+      return GetFormat;
+    },
+  });
+};
+Vue.use(GetFormat);
+
+export { GetValue, GetFormat };
