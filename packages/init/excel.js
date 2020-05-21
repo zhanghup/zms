@@ -1,6 +1,7 @@
 function FormatData(columns, data) {
   let list = {};
   let level = {};
+  let header = {};
 
   function fmt(cols, idx) {
     if (!level[idx]) {
