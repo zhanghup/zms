@@ -1,51 +1,57 @@
-function FormatData(columns, data) {
+function FormatData(columns, data, showstyle) {
   let list = {};
   let level = {};
-  let header = {};
+  let h = {};
+  let datacolumns = [];
 
-  function fmt(cols, idx) {
+  function fmt(cols, idx, pidx) {
     if (!level[idx]) {
       level[idx] = 1;
     }
     let collength = 0;
     if (!cols || cols.length == 0) return [level[idx], collength];
 
-    let h = {};
     for (let i = 0; i < cols.length; i++) {
       let col = cols[i];
 
       if (col.children && col.children.length > 0) {
-        let [crowlength, ccollength] = fmt(col.children, idx + 1);
+        let [crowlength, ccollength] = fmt(col.children, idx + 1, i);
         if (level[idx] < crowlength + 1) {
           level[idx] = crowlength + 1;
         }
         collength += ccollength;
-        h[i] = { index: i, col: ccollength, row: crowlength + 1, style: col.style, title: col.title };
+        h[`${idx}-${pidx}-${i}`] = { col: ccollength, row: crowlength + 1, style: col.style, title: col.title };
       } else {
         collength += 1;
-        h[i] = { index: i, col: 1, row: 1, style: col.style, title: col.title };
+        h[`${idx}-${pidx}-${i}`] = { col: 1, row: 1, style: col.style, title: col.title };
       }
     }
 
     return [level[idx], collength];
   }
 
-  function fmt2(cols, idx) {
+  function fmt2(cols, idx, pidx) {
     let rowlength = level[idx];
     for (let i = 0; i < cols.length; i++) {
-      let hh = h[i];
+      let hh = h[`${idx}-${pidx}-${i}`];
+      let col = cols[i];
 
-      if (h[i].row == 1) {
+      if (hh.row == 1) {
         hh.row = rowlength;
       } else {
         hh.row = 1;
       }
-      console.log(hh, rowlength);
+
+      if (col.children && col.children.length > 0) {
+        fmt2(col.children, idx + 1, i);
+      } else {
+        datacolumns.push(col);
+      }
 
       if (!list[idx]) {
         list[idx] = "";
       }
-      list[idx] += FormatCell(hh.title, hh.row, hh.col, hh.style);
+      list[idx] += FormatCell(hh.title, hh.row, hh.col, showstyle ? hh.style : "");
     }
   }
 
@@ -65,7 +71,7 @@ function FormatCell(value, rowspan, colspan, style) {
 }
 
 const ExportExcel = function(columns, data, { filename = "数据.xlsx", sheetname = "数据", showstyle = false }) {
-  let body = FormatData(columns, data);
+  let body = FormatData(columns, data, showstyle);
 
   //下载的表格模板数据
   let template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" 
