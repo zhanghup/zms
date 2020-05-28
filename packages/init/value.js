@@ -196,7 +196,8 @@ export class value {
       { key: /S+/, value: t.getSeconds().toString() }, // 秒
     ];
 
-    for (let o of opts) {
+    for (let idx = 0; idx < opts.length; idx++) {
+      let o = opts[idx];
       let match = opt.match(o.key);
       if (!match) continue;
       let len = match[0].length;
@@ -256,7 +257,7 @@ function GetValue(key, obj, ...format) {
   }
   return v;
 }
-GetValue.install = function (Vue) {
+GetValue.install = function(Vue) {
   Object.defineProperty(Vue.prototype, "$v", {
     get: function get() {
       return GetValue;
@@ -274,7 +275,7 @@ function GetFormat(v, ...format) {
   }
   return v;
 }
-GetFormat.install = function (Vue) {
+GetFormat.install = function(Vue) {
   Object.defineProperty(Vue.prototype, "$f", {
     get: function get() {
       return GetFormat;

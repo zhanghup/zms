@@ -1,3 +1,5 @@
+import { GetValue, GetFormat } from "./value";
+
 function FormatData(columns, data, showstyle) {
   let list = {};
   let level = {};
@@ -62,6 +64,15 @@ function FormatData(columns, data, showstyle) {
   for (let i = 0; true; i++) {
     if (!list[i]) break;
     result += `<tr>${list[i]}</tr>`;
+  }
+
+  for (let d of data) {
+    result += "<tr>";
+    for (let col of datacolumns) {
+      let v = GetValue(col.key, d, col.format);
+      result += FormatCell(v, null, null, null);
+    }
+    result += "</tr>";
   }
   return result;
 }
