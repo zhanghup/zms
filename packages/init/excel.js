@@ -110,3 +110,5 @@ const ExportExcel = function(columns, data, { filename = "数据.xlsx", sheetnam
   a.href = URL.createObjectURL(new Blob([arr]));
   a.click();
 };
+
+export default ExportExcel;
