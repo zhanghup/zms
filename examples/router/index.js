@@ -1,4 +1,4 @@
-import zpx from "zpx";
+import zpx from "../../packages/zpx";
 
 zpx.initRouter([
   {

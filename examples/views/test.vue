@@ -1,11 +1,13 @@
 <template>
   <div class="about">
     {{ $v("b.c", a) }}
+    <div>{{$utils.uuid()}}</div>
+    <div>{{$utils.md5("123")}}</div>
   </div>
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       a: {
         b: {
@@ -18,6 +20,6 @@ export default {
       }
     };
   },
-  created () { }
+  created() {}
 };
 </script>

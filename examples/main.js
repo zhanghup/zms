@@ -1,6 +1,6 @@
 // import Vue from 'vue'
 
-import zpx from "zpx";
+import zpx from "../packages/zpx";
 import "./router";
 import "./store";
 

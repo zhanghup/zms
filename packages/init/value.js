@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export class value {
   // 不支持 "[","]" 字符作为属性名称
   // 1. key: a.b.c                     value: Object   format: time:YYYY-MM-DD
@@ -246,7 +244,8 @@ export class value {
 
 value.dictmap = {};
 
-// GetValue
+
+
 function GetValue(key, obj, ...format) {
   let o = JSON.parse(JSON.stringify(obj));
   let v = value.GetValue(key, o);
@@ -257,16 +256,7 @@ function GetValue(key, obj, ...format) {
   }
   return v;
 }
-GetValue.install = function(Vue) {
-  Object.defineProperty(Vue.prototype, "$v", {
-    get: function get() {
-      return GetValue;
-    },
-  });
-};
-Vue.use(GetValue);
 
-// GetFormat
 function GetFormat(v, ...format) {
   if (format && format.length > 0) {
     for (let f of format) {
@@ -275,48 +265,7 @@ function GetFormat(v, ...format) {
   }
   return v;
 }
-GetFormat.install = function(Vue) {
-  Object.defineProperty(Vue.prototype, "$f", {
-    get: function get() {
-      return GetFormat;
-    },
-  });
-};
-Vue.use(GetFormat);
 
-function fmtField(obj, field, value, i = 0) {
-  let fields = field.split(".");
 
-  if (i < fields.length - 1) {
-    let f = fields[i];
-    if (obj[f] === undefined) {
-      obj[f] = fmtField({}, field, i + 1, value);
-    } else {
-      obj[f] = fmtField(obj[f], field, i + 1, value);
-    }
-    return obj;
-  } else if (i === fields.length - 1) {
-    obj[fields[i]] = value;
-    return obj;
-  }
-  return null;
-}
 
-function FormatObject(list) {
-  let result = {};
-  for (let o of list) {
-    fmtField(result, o.key, o.value);
-  }
-  return result;
-}
-
-FormatObject.install = function(Vue) {
-  Object.defineProperty(Vue.prototype, "$obj", {
-    get: function get() {
-      return FormatObject;
-    },
-  });
-};
-Vue.use(FormatObject);
-
-export { GetValue, GetFormat, FormatObject };
+export { GetValue, GetFormat };
