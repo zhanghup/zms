@@ -1,6 +1,5 @@
-console.log ('引入成功')
+// console.log ('引入成功')
  
-(function(window){
     
     const PENDING = 'pending';
     const RESOLVED = 'resolved';
@@ -9,9 +8,10 @@ console.log ('引入成功')
     class Promise{
         /**
          * Promise构造函数
-         * excutor:执行器函数 （同步执行）
+         * excutor:执行器函数 
+         * async: 是否同步执行
          */
-        constructor(excutor){
+        constructor(excutor,async = true){
             //  将当前promise对象保存起来
             const self  = this;
             self.status = PENDING; // 给Promise对象指定一个status属性，初始值是pending
@@ -28,13 +28,14 @@ console.log ('引入成功')
                 // 保存value数据
                 self.data = value;
                 // 如果有待执行的callback函数，异步执行回调
-                if (self.callbacks.length>0){
+                if (self.callbacks.length>1){
                     self.callbacks.forEach(callbacksObj => {
                         setTimeout(()=>{ // 把所有成功的回调放进异步队列里面执行
                             callbacksObj.onResolved(value);
                         },0)
-                        
                     });
+                }else if (self.callbacks.length === 1){
+                    return self.callbacks[0].onResolved(value);
                 }
             }
             function reject(reason){
@@ -47,18 +48,30 @@ console.log ('引入成功')
                 // 保存value数据
                 self.data = reason;
                 // 如果有待执行的callback函数，异步执行回调
-                if (self.callbacks.length>0){
+                if (self.callbacks.length>1){
                     self.callbacks.forEach(callbacksObj => {
                         setTimeout(()=>{ // 把所有成功的回调放进异步队列里面执行
                             callbacksObj.onRejected(reason);
+                            // console.log(callbacksObj.onRejected(reason))
                         },0)
                     });
+                }else if (self.callbacks.length === 1){
+                    return self.callbacks[0].onRejected(reason);
                 }
             }
+
  
-            //立即同步执行excutor 
+            
             try{
-                excutor(resolve, reject)
+                if (async){
+                    // 异步执行
+                    setTimeout(() => {
+                        excutor(resolve, reject)
+                    }, 1);
+                }else{
+                    //立即同步执行excutor 
+                    excutor(resolve, reject)
+                }
             }catch(error){
                 // 如果执行器抛出异常，promise对象变为rejected状态
                 reject(error)
@@ -71,12 +84,11 @@ console.log ('引入成功')
          * return: 一个新的Promise对象
          */
         then(onResolved, onRejected){
-        
             onResolved = typeof onResolved === 'function' ? onResolved : value => value // 向后传递成功的value
             // 指定默认的失败的回调，实现错误/异常传透的关键点
             onRejected = typeof onRejected === 'function' ? onRejected : reason => {throw reason}
             const self = this;
-    
+
             // 返回一个新的promise对象
             return new Promise((resolve,reject)=>{
     
@@ -92,6 +104,7 @@ console.log ('引入成功')
                      */
                     try{
                         const result = callback(self.data);
+                        
                         if (result instanceof Promise) {
                             // result.then(
                             //     value =>resolve(value), // 当result成功时，返回的promise也成功
@@ -99,34 +112,48 @@ console.log ('引入成功')
                             // )
                             result.then(resolve,reject)
                         } else {
-                            // 3.
-                            resolve(result);
+                            return result
                         }
                     }catch(error){
-                        // 1.
-                        reject(error);
+                        return reject(error);
                     }
                 }
                 //  当前状态还是pending，将回调函数保存起来
                 if (self.status === PENDING) {
                     self.callbacks.push({
                         onResolved(value){
-                            handle(onResolved);
+                            return handle(onResolved);
                         },
                         onRejected(reason){
-                            handle(onRejected);
+                            return handle(onRejected);
                         }
                     });
                 } else if (self.status === RESOLVED){ //如果当前是resolved状态，异步执行onResolve并改变return的promise状态
-                    setTimeout(()=>{
-                        handle(onResolved);
+                    // setTimeout(()=>{
+                    //     handle(onResolved);
+                    // });
+                    self.callbacks.push({
+                        onResolved(value){
+                            return handle(onResolved);
+                        },
+                        onRejected(reason){
+                            return handle(onRejected);
+                        }
                     });
                 } else { //如果当前是rejected状态，异步执行onRejected 并改变return的promise状态
-                    setTimeout(()=>{
-                        handle(onRejected);
-                    })
+                    // setTimeout(()=>{
+                    //     handle(onRejected);
+                    // })
+                    self.callbacks.push({
+                        onResolved(value){
+                            return handle(onResolved);
+                        },
+                        onRejected(reason){
+                            return handle(onRejected);
+                        }
+                    });
                 }
-            })
+            },false)
     
     
         }
@@ -210,5 +237,4 @@ console.log ('引入成功')
     }
  
     // 向外暴露Promise函数
-    window.Promise = Promise;
-})(window)
+    export default Promise;
