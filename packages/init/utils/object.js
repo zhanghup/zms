@@ -4,9 +4,9 @@ function fmtField(obj, field, value, i = 0) {
   if (i < fields.length - 1) {
     let f = fields[i];
     if (obj[f] === undefined) {
-      obj[f] = fmtField({}, field, i + 1, value);
+      obj[f] = fmtField({}, field, value, i + 1);
     } else {
-      obj[f] = fmtField(obj[f], field, i + 1, value);
+      obj[f] = fmtField(obj[f], field, value, i + 1);
     }
     return obj;
   } else if (i === fields.length - 1) {

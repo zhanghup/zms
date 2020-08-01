@@ -1,8 +1,8 @@
 <template>
   <div class="about">
     {{ $v("b.c", a) }}
-    <div>{{$utils.uuid()}}</div>
-    <div>{{$utils.md5("123")}}</div>
+    <div>{{ $utils.uuid() }}</div>
+    <div>{{ $utils.md5("123") }}</div>
   </div>
 </template>
 <script>
@@ -13,13 +13,13 @@ export default {
         b: {
           c: {
             d: {
-              e: 1
-            }
-          }
-        }
-      }
+              e: 1,
+            },
+          },
+        },
+      },
     };
   },
-  created() {}
+  created() {},
 };
 </script>
