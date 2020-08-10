@@ -4,7 +4,7 @@ import initRouter from "./init/router.js";
 import initStore from "./init/store.js";
 import { GetValue, GetFormat } from "./init/value";
 import Promisem from "./init/promise"
-import ajax from "./init/util/ajax.js"
+import ajax from "./init/utils/ajax.js"
 
 let zpx = Vue;
 zpx.settings = {};
