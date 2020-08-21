@@ -4,7 +4,7 @@ import Promisem from "./init/promise";
 import ajax from "./init/utils/ajax.js";
 import utils from "./init/utils/index";
 
-export { GetValue, GetFormat, Promisem, ajax };
+export { GetValue, GetFormat, Promisem, ajax, utils };
 
 export default function(Vue, param = {}) {
   Vue.prototype.$utils = utils;
