@@ -1,9 +1,15 @@
-// import Vue from 'vue'
-
+import Vue from "vue";
 import zpx from "../packages/zpx";
-import "./router";
-import "./store";
+import router from "./router";
+import store from "./store";
+import App from "./App";
 
-zpx.config.productionTip = false;
+Vue.config.productionTip = false;
 
-zpx.init();
+zpx(Vue, {
+  render(h) {
+    return h(App);
+  },
+  router,
+  store,
+}).$mount("#app");

@@ -1,8 +1,10 @@
-import zpx from "../../packages/zpx";
+import Vue from "vue";
+import Vuex from "vuex";
 
-zpx.initVuex({
+Vue.use(Vuex);
+export default new Vuex.Store({
   state: {},
   mutations: {},
   actions: {},
-  modules: {}
+  modules: {},
 });

@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    dddddd
     <router-item :list="list"></router-item>
   </div>
 </template>
@@ -14,12 +15,12 @@ export default {
           title: "订单中心",
           name: "Order",
           icon: "iconorder",
-          query: { a: 1, b: 2 }
+          query: { a: 1, b: 2 },
         },
         { title: "地址管理", name: "Address", icon: "icondizhi" },
-        { title: "关于我们", name: "About", icon: "iconguanyu" }
-      ]
+        { title: "关于我们", name: "About", icon: "iconguanyu" },
+      ],
     };
-  }
+  },
 };
 </script>

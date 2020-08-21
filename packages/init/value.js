@@ -244,8 +244,6 @@ export class value {
 
 value.dictmap = {};
 
-
-
 function GetValue(key, obj, ...format) {
   let o = JSON.parse(JSON.stringify(obj));
   let v = value.GetValue(key, o);
@@ -265,7 +263,5 @@ function GetFormat(v, ...format) {
   }
   return v;
 }
-
-
 
 export { GetValue, GetFormat };
