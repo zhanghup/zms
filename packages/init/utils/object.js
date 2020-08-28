@@ -18,8 +18,16 @@ function fmtField(obj, field, value, i = 0) {
 
 export default function(list) {
   let result = {};
-  for (let o of list) {
-    fmtField(result, o.key, o.value);
+
+  if (list instanceof Array) {
+    for (let o of list) {
+      fmtField(result, o.key, o.value);
+    }
+  } else {
+    for (let k in list) {
+      fmtField(result, k, list[k]);
+    }
   }
+
   return result;
 }

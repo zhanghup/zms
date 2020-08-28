@@ -230,7 +230,7 @@ export class value {
   */
   static formatTemplate(opt, value) {
     if (!opt) return value;
-    return opt.replace(/\$value/g, value);
+    return opt.replace(/\${value}/g, value);
   }
   static formatToFixed(opt, value) {
     if (opt == undefined) {
@@ -260,4 +260,11 @@ function GetValue(key, obj, ...format) {
   return v;
 }
 
-export { GetValue, GetFormat };
+function SetDicts(dicts) {
+  value.dictmap = {};
+  for (let o of dicts) {
+    value.dictmap[o.code] = o.values;
+  }
+}
+
+export { GetValue, GetFormat, SetDicts };
