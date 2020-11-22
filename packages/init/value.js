@@ -220,9 +220,9 @@ export class value {
 
   static formatDict(opt, value) {
     if (!opt) return null;
-    let dict = this.dictmap[opt];
-    if (!dict || !dict.values) return null;
-    let o = dict.values.find((r) => r.value == value);
+    let items = this.dictmap[opt];
+    if (!items || items.length === 0) return null;
+    let o = items.find((r) => r.value === value);
     return o.name;
   }
   /*
