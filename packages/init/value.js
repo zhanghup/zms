@@ -222,7 +222,7 @@ export class value {
     if (!opt) return null;
     let items = this.dictmap[opt];
     if (!items || items.length === 0) return null;
-    let o = items.find((r) => r.value === value);
+    let o = items.find((r) => r.value === value)||{};
     return o.name;
   }
   /*
