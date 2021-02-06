@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-import {ExportData} from "../../packages/init/excel"
+import {ExportData} from "../../packages/init/utils/excel"
 
 export default {
   data() {
