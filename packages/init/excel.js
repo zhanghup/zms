@@ -1,114 +1,254 @@
-import { GetValue, GetFormat } from "./value";
+const FileSaver = require("file-saver");
+import XLSX from "xlsx";
 
-function FormatData(columns, data, showstyle) {
-  let list = {};
-  let level = {};
-  let h = {};
-  let datacolumns = [];
+function Workbook() {
 
-  function fmt(cols, idx, pidx) {
-    if (!level[idx]) {
-      level[idx] = 1;
+    if (!(this instanceof Workbook)) return new Workbook();
+    this.SheetNames = [];
+    this.Sheets = {};
+}
+
+function s2ab(s) {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
+    return buf;
+}
+
+function formatType(str) {
+    switch (str) {
+        case "stub":
+            return "z";
+        case "string":
+            return "s";
+        case "date":
+            return "d";
+        case "number":
+            return "n";
+        case "error":
+            return "e";
+        case "boolean":
+            return "b";
+        default:
+            return "s";
     }
-    let collength = 0;
-    if (!cols || cols.length == 0) return [level[idx], collength];
+}
 
-    for (let i = 0; i < cols.length; i++) {
-      let col = cols[i];
+let cc = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
+];
 
-      if (col.children && col.children.length > 0) {
-        let [crowlength, ccollength] = fmt(col.children, idx + 1, i);
-        if (level[idx] < crowlength + 1) {
-          level[idx] = crowlength + 1;
+function getCC(i) {
+    if (i < 26) {
+        return cc[i];
+    }
+    let n = parseInt(i / 26) - 1;
+    return cc[n] + getCC(i % 26);
+}
+
+function formatData(data) {
+    let result = {};
+    let merges = [];
+    let mgcell = [];
+
+    function rowFormat(row, r) {
+        function cellIndexFormat(r, c) {
+            for (let mg of mgcell) {
+                if (r >= mg[0] && r <= mg[1] && c >= mg[2] && c <= mg[3]) {
+                    if (r >= mg[0] && r <= mg[1] && c >= mg[2] && c <= mg[3]) {
+                        c = mg[3] + 1;
+                        return cellIndexFormat(r, c);
+                    }
+                }
+            }
+            return c;
         }
-        collength += ccollength;
-        h[`${idx}-${pidx}-${i}`] = { col: ccollength, row: crowlength + 1, style: col.style, title: col.title };
-      } else {
-        collength += 1;
-        h[`${idx}-${pidx}-${i}`] = { col: 1, row: 1, style: col.style, title: col.title };
-      }
+
+        let c = 0;
+
+        for (let cell of row) {
+            c = cellIndexFormat(r, c);
+
+            let mg = rowspan_and_colspan(r, c, cell);
+
+            if (mg.status) {
+                delete mg.status;
+                merges.push(mg);
+                mgcell.push([r, mg.e.r, c, mg.e.c]);
+            }
+
+            result[getCC(c) + (r + 1)] = {
+                v: cell.title,
+                t: formatType(cell.type),
+                s: formatStyle(cell.style)
+            };
+
+            c = mg.e.c + 1;
+        }
+        return c;
     }
 
-    return [level[idx], collength];
-  }
-
-  function fmt2(cols, idx, pidx) {
-    let rowlength = level[idx];
-    for (let i = 0; i < cols.length; i++) {
-      let hh = h[`${idx}-${pidx}-${i}`];
-      let col = cols[i];
-
-      if (hh.row == 1) {
-        hh.row = rowlength;
-      } else {
-        hh.row = 1;
-      }
-
-      if (col.children && col.children.length > 0) {
-        fmt2(col.children, idx + 1, i);
-      } else {
-        datacolumns.push(col);
-      }
-
-      if (!list[idx]) {
-        list[idx] = "";
-      }
-      list[idx] += FormatCell(hh.title, hh.row, hh.col, showstyle ? hh.style : "");
+    let r = 0,
+        max = 0;
+    for (let row of data) {
+        let c = rowFormat(row, r);
+        if (c > max) {
+            max = c;
+        }
+        r += 1;
     }
-  }
 
-  fmt(columns, 0);
-  fmt2(columns, 0);
-
-  let result = "";
-  for (let i = 0; true; i++) {
-    if (!list[i]) break;
-    result += `<tr>${list[i]}</tr>`;
-  }
-
-  for (let d of data) {
-    result += "<tr>";
-    for (let col of datacolumns) {
-      let v = GetValue(col.key, d, col.format);
-      result += FormatCell(v, null, null, null);
-    }
-    result += "</tr>";
-  }
-  return result;
+    return {
+        ...result,
+        "!ref": XLSX.utils.encode_range({s: {r: 0, c: 0}, e: {r, c: max}}),
+        "!merges": merges
+    };
 }
 
-function FormatCell(value, rowspan, colspan, style) {
-  return `<td${rowspan ? ` rowspan='${rowspan}'` : ""}${colspan ? ` colspan='${colspan}'` : ""}${style ? ` style='${style}'` : ""}>${value}</td>`;
+function formatStyle(data) {
+    let result = {
+        fill: {},
+        font: {},
+        numFmt: {},
+        alignment: {},
+        border: {}
+    };
+    for (let k in data) {
+        switch (k) {
+            case "color":
+                result.font.color = {rgb: data[k]};
+        }
+    }
+    return result;
 }
 
-const ExportExcel = function(columns, data, { filename = "数据.xlsx", sheetname = "数据", showstyle = false }) {
-  let body = FormatData(columns, data, showstyle);
+function rowspan_and_colspan(r, c, data) {
+    let rr = data.rowspan ? parseInt(data.rowspan) : 1;
+    let cc = data.colspan ? parseInt(data.colspan) : 1;
+    let status = rr > 1 || cc > 1;
+    let result = {
+        status,
+        s: {
+            c: c,
+            r: r //rows 开始行
+        },
+        e: {
+            c: c + cc - 1,
+            r: r + rr - 1
+        }
+    };
+    return result;
+}
 
-  //下载的表格模板数据
-  let template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" 
-      xmlns:x="urn:schemas-microsoft-com:office:excel" 
-      xmlns="http://www.w3.org/TR/REC-html40">
-      <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
-        <x:Name>${sheetname}</x:Name>
-        <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
-        </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
-        </head><body><table>${body}</table></body></html>`;
+/*
+    每个单元格的格式说明 !!! js-xlsx   暂时不支持自定义样式，需要使用pro版本
+    header[0][0]= data[0][0] = {
+        title: "单元格的内容",
+        type:"单元格的数据类型" - ["boolean","error","number","date","string","stub"],
+        rowspan:2,
+        colspan:2,
+        style:{
+            color:"单元格内容的颜色",
+            background:"单元格背景色",
+            border:""
+        }
+    }
+*/
+export function ExportData({header = [],data = [], sheetName,size=2500,filename, autoWidth = true, bookType = "xlsx"} = {}) {
+    let tstart = new Date().getTime() / 1000
+    console.log(tstart)
+    /* original data */
+    filename = filename || "excel-list";
+    var wb = new Workbook();
 
-  let uri = "data:application/vnd.ms-excel;base64," + btoa(unescape(encodeURIComponent(template)));
+    let l = data.length
+    let page = parseInt(l / size)
+    if (l % size > 0) {
+        page += 1
+    }
 
-  var binStr = atob(uri.split(",")[1]),
-    len = binStr.length,
-    arr = new Uint8Array(len);
+    for (let ni = 0; ni < page; ni++){
+        var ws_name = sheetName || "SheetJS";
+        if (page > 1){
+            ws_name = `${ws_name}-第${ni+1}页`
+        }
+        let dataN = data.slice(ni * size,(ni+1)*size);
+        var ws = formatData([...header,...dataN]);
 
-  for (var i = 0; i < len; i++) {
-    arr[i] = binStr.charCodeAt(i);
-  }
+        if (autoWidth) {
+            /*设置worksheet每列的最大宽度*/
+            const colWidth = dataN.map(row =>
+                row.map(val => {
+                    /*先判断是否为null/undefined*/
+                    if (val == null) {
+                        return {
+                            wch: 10
+                        };
+                    } else if (val.toString().charCodeAt(0) > 255) {
+                        /*再判断是否为中文*/
+                        return {
+                            wch: val.toString().length * 2
+                        };
+                    } else {
+                        return {
+                            wch: val.toString().length
+                        };
+                    }
+                })
+            );
+            /*以第一行为初始值*/
+            let result = colWidth[0];
+            for (let i = 1; i < colWidth.length; i++) {
+                if (result.length < colWidth[i].length) {
+                    result = colWidth[i];
+                }
+            }
+            ws["!cols"] = result;
+        }
 
-  var a = document.createElement("a");
-  a.download = filename;
-  a.innerHTML = "download";
-  a.href = URL.createObjectURL(new Blob([arr]));
-  a.click();
-};
+        /* add worksheet to workbook */
+        wb.SheetNames.push(ws_name);
+        wb.Sheets[ws_name] = ws;
+    }
 
-export default ExportExcel;
+    var wbout = XLSX.write(wb, {
+        bookType: bookType,
+        bookSST: false,
+        type: "binary"
+    });
+    console.log(new Date().getTime() / 1000);
+    FileSaver.saveAs(
+        new Blob([s2ab(wbout)], {
+            type: "application/octet-stream"
+        }),
+        `${filename}.${bookType}`
+    );
+
+    console.log((new Date().getTime() / 1000) - tstart)
+}
+

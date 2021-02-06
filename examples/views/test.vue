@@ -4,9 +4,12 @@
     <div>{{ $utils.uuid() }}</div>
     <div>{{ $utils.md5("123") }}</div>
     <button @click="dian">点点点点</button>
+    <button @click="daochu">导出</button>
   </div>
 </template>
 <script>
+import {ExportData} from "../../packages/init/excel"
+
 export default {
   data() {
     return {
@@ -33,6 +36,31 @@ export default {
           console.log(r);
         });
     },
+    daochu(){
+      ExportData({header:this.columns(),data:this.datas()})
+      // ExportExcel(this.columns(),this.datas(),{filename:"a.xlsx"})
+    },
+    columns(){
+      let cols = []
+      for (let i = 0; i < 100; i++){
+        cols.push({
+          title:"AAA"+i,
+        })
+      }
+
+      return [cols]
+    },
+    datas(){
+      let datas = []
+      for (let i = 0; i < 10000;i++){
+        let info = []
+        for (let j = 0; j < 100; j++){
+          info.push({title:j})
+        }
+        datas.push(info)
+      }
+      return datas
+    }
   },
   created() {},
 };
