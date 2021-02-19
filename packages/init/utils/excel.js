@@ -179,9 +179,7 @@ function rowspan_and_colspan(r, c, data) {
         }
     }
 */
-export function ExportData({header = [],data = [], sheetName,size=2500,filename, autoWidth = true, bookType = "xlsx"} = {}) {
-    let tstart = new Date().getTime() / 1000
-    console.log(tstart)
+export default function ExportData({header = [],data = [], sheetName,size=2500,filename, autoWidth = true, bookType = "xlsx"} = {}) {
     /* original data */
     filename = filename || "excel-list";
     var wb = new Workbook();
@@ -198,7 +196,8 @@ export function ExportData({header = [],data = [], sheetName,size=2500,filename,
             ws_name = `${ws_name}-第${ni+1}页`
         }
         let dataN = data.slice(ni * size,(ni+1)*size);
-        var ws = formatData([...header,...dataN]);
+        dataN = [...header,...dataN]
+        var ws = formatData(dataN);
 
         if (autoWidth) {
             /*设置worksheet每列的最大宽度*/
@@ -241,14 +240,11 @@ export function ExportData({header = [],data = [], sheetName,size=2500,filename,
         bookSST: false,
         type: "binary"
     });
-    console.log(new Date().getTime() / 1000);
     FileSaver.saveAs(
         new Blob([s2ab(wbout)], {
             type: "application/octet-stream"
         }),
         `${filename}.${bookType}`
     );
-
-    console.log((new Date().getTime() / 1000) - tstart)
 }
 
