@@ -1,18 +1,17 @@
 {
-  "name": "zpx",
-  "version": "2.0.0",
+  "name": "zpx.v2",
+  "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview"
   },
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@vitejs/plugin-vue": "^1.1.4",
-    "@vue/compiler-sfc": "^3.0.5",
-    "vite": "^2.0.1",
-    "vue": "^3.0.5"
+    "@vitejs/plugin-vue": "^1.1.5",
+    "typescript": "^4.1.3",
+    "vite": "^2.0.5",
+    "vue": "^3.0.5",
+    "vue-router": "^4.0.4"
   }
 }
