@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="eb95478d-7506-4c33-b577-c9cfaf8884e6" name="Default Changelist" comment="" />
+    <list default="true" id="eb95478d-7506-4c33-b577-c9cfaf8884e6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,7 +29,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
-    <property name="ts.external.directory.path" value="C:\workspace\mywork\zpx.v2\node_modules\typescript\lib" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2020.3.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -64,7 +66,8 @@
       <workItem from="1614608523506" duration="436000" />
       <workItem from="1614609757372" duration="99000" />
       <workItem from="1614610021209" duration="74000" />
-      <workItem from="1615126842384" duration="8234000" />
+      <workItem from="1615126842384" duration="8432000" />
+      <workItem from="1615213404541" duration="8000" />
     </task>
     <servers />
   </component>
