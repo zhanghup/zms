@@ -1,18 +1,18 @@
-export default DictFormat{
-    private dicts: Array<Dict> = []
+export default class DictFormat {
+    private dicts: Dict[]
 
-    set Dict(dicts: Array<Dict>){
+    set Dict(dicts: Array<Dict>) {
         this.dicts = dicts
     }
 }
 
-export class Dict{
-    private code: String;
-    private name: String;
-    private valus: Array<DictItem>;
+export interface Dict {
+    code: String;
+    name: String;
+    values: DictItem[];
 }
 
-export class DictItem{
-    private name: String;
-    private value: String;
+export interface DictItem {
+    name: String;
+    value: String;
 }

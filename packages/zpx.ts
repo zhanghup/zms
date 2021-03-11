@@ -12,12 +12,8 @@ import Vals from './lib/vals'
 export class Zpx {
     private vf = new Vals()
 
-    public $v(key:string,value:any,...fmt: string[]){
-        return this.vf.$v(key,value,...fmt)
-    }
-
-    public  $f(value: any,...fmt: string[]){
-        return this.vf.$f(value,...fmt)
+    public $v(value: any, ...keyOrFormat: string[]) {
+        return this.vf.$v(value, ...keyOrFormat)
     }
 }
 
