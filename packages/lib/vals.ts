@@ -17,8 +17,8 @@ export default class Vals {
                 v = this.$value(kf, v)
             } else if (/^(D|dict):([0-9a-zA-Z]+)$/.test(kf)) {
 
-            } else if (/^(T|time):([YMDHhmsS]+)$/.test(kf)) {
-
+            } else if (/^(T|time):.+$/.test(kf)) {
+                v = this.formatTime(kf.replace("T:","").replace("time:",""),v)
             }
 
         }
@@ -34,7 +34,7 @@ export default class Vals {
      * @param key 需要取数的对象
      */
     private $value(key: string, value: any): any {
-        if (key === "") {
+        if (key === "" || value === null || value === undefined) {
             return value
         }
 
@@ -65,18 +65,19 @@ export default class Vals {
                 klast = klast.slice(1)
             }
 
-            if (value instanceof Array) {
-                return this.$value(klast, value[k])
-            } else {
-                console.error("非数组类型，不能使用“a.b.[1].c”格式取值")
-            }
+            return this.$value(klast, value[k])
         }
 
         /** 示例3. a.b.[f.g=='2'].c.d.e */
         kl = key.match(/^\[[a-z0-9A-Z_$.\s'"=><]+\]/i)
         if (kl && kl.length > 0) {
             let k = kl[0].slice(1, -1)
+            let klast = key.replace(kl[0], "")
+            if (klast.indexOf(".") === 0) {
+                klast = klast.slice(1)
+            }
             let v = this.filter(k, value)
+            return this.$value(klast, v)
         }
     }
 
@@ -114,6 +115,57 @@ export default class Vals {
         else if (/^\d+\.\d+$/.test(obj)) return parseFloat(obj);
         else if (/^".*?"$|^'.*?'$|^`.*?`$/.test(obj)) return obj.slice(1, -1); // 字符串
         return null;
+    }
+
+    private formatTime(opt: string, value: number) {
+        if (value == null) {
+            return null;
+        }
+        let t = null;
+        if ((value + "").length == 10) {
+            t = new Date(value * 1000);
+        } else if ((value + "").length == 13) {
+            t = new Date(value);
+        } else {
+            t = new Date(value * 1000);
+        }
+
+        if (!opt) {
+            opt = "YYYY-MM-DD";
+        }
+
+        let opts = [
+            {key: /Y+/, value: t.getFullYear().toString()}, // 年
+            {key: /M+/, value: (t.getMonth() + 1).toString()}, // 月
+            {key: /D+/, value: t.getDate().toString()}, // 日
+            {key: /H+/, value: t.getHours().toString()}, // 时
+            {key: /m+/, value: t.getMinutes().toString()}, // 分
+            {key: /s+/, value: t.getSeconds().toString()}, // 秒
+            {key: /S+/, value: t.getMilliseconds().toString()}, // 耗秒
+        ];
+
+        for (let idx = 0; idx < opts.length; idx++) {
+            let o = opts[idx];
+            let match = opt.match(o.key);
+            if (!match) continue;
+            let len = match[0].length;
+            let value = o.value;
+            switch (len) {
+                case 1:
+                    break;
+                case 2:
+                    value = ("000" + value).slice(-2);
+                    break;
+                case 3:
+                    value = ("000" + value).slice(-3);
+                    break;
+                case 4:
+                    value = ("000" + value).slice(-4);
+                    break;
+            }
+            opt = opt.replace(o.key, value);
+        }
+        return opt;
     }
 
     set Dict(dict: DictFormat) {
