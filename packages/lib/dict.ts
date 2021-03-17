@@ -1,18 +1,39 @@
 export default class DictFormat {
-    private dicts: Dict[]
+    private dicts: Dict[] = []
+    private dictmap: DictMapIndx = {}
 
-    set Dict(dicts: Array<Dict>) {
+    public GetName(key: string, value: string): string | null | undefined {
+        let dict = this.dictmap[key]
+        if (!dict) return null
+        let values = dict.values
+        if (!values || values.length == 0) return null
+        let o = values.find(r => r.value == value)
+        if (!o) {
+            return null
+        }
+        return o.name
+    }
+
+    public SetDict(dicts: Dict[]) {
         this.dicts = dicts
+        this.dictmap = {}
+        for (let o of dicts) {
+            this.dictmap[o.code] = o
+        }
     }
 }
 
+interface DictMapIndx {
+    [index: string]: Dict
+}
+
 export interface Dict {
-    code: String;
-    name: String;
+    code: string;
+    name: string;
     values: DictItem[];
 }
 
 export interface DictItem {
-    name: String;
-    value: String;
+    name: string;
+    value: string;
 }

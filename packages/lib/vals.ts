@@ -3,8 +3,7 @@ import DictFormat from "./dict";
 export default class Vals {
     private dict: DictFormat = new DictFormat();
 
-    constructor() {
-    }
+    constructor() {}
 
     public $v(value: any, ...keyOrFormat: string[]) {
         if (keyOrFormat.length === 0) {
@@ -16,11 +15,10 @@ export default class Vals {
             if (/^[0-9a-zA-Z_.$\[\]\s><='"]+$/.test(kf)) {
                 v = this.$value(kf, v)
             } else if (/^(D|dict):([0-9a-zA-Z]+)$/.test(kf)) {
-
+                v = this.formatDict(kf.replace("D:", "").replace("dict:", ""), v)
             } else if (/^(T|time):.+$/.test(kf)) {
-                v = this.formatTime(kf.replace("T:","").replace("time:",""),v)
+                v = this.formatTime(kf.replace("T:", "").replace("time:", ""), v)
             }
-
         }
         return v
     }
@@ -168,7 +166,15 @@ export default class Vals {
         return opt;
     }
 
-    set Dict(dict: DictFormat) {
+    private formatDict(opt: string, value: string) {
+        if (value == null) {
+            return null;
+        }
+        return this.dict.GetName(opt, value)
+    }
+
+
+    public Dict(dict: DictFormat) {
         this.dict = dict
     }
 }

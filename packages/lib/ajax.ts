@@ -1,10 +1,17 @@
-function Ajax({url,method = "POST",async = true,header={},contentType = "application/json",timeout = 10000, data = {},success,error}){
-  var xhr 
-  if (window.XMLHttpRequest){
-      xhr=new XMLHttpRequest();
-  } else {
-      xhr=new ActiveXObject("Microsoft.XMLHTTP");
-  }
+export interface Input{
+  url: string
+  method: string
+  async: boolean
+  header: any
+  contentType: string
+  timeout: number
+  data: any
+  success: Function
+  error: Function
+}
+
+export default function Ajax({url,method = "POST",async = true,header={},contentType = "application/json",timeout = 10000, data = {},success,error}: Input){
+  var xhr=new XMLHttpRequest();
 
   if (async){
     xhr.timeout = timeout;
@@ -27,7 +34,7 @@ function Ajax({url,method = "POST",async = true,header={},contentType = "applica
     xhr.send(data);
   }
   
-  function Response (success,error) {
+  function Response (success?: Function,error?: Function) {
     let type = xhr.getResponseHeader("Content-type")
 
     let response 
@@ -66,4 +73,3 @@ function Ajax({url,method = "POST",async = true,header={},contentType = "applica
   }
 }
 
-export default Ajax
