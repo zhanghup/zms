@@ -1,6 +1,10 @@
 {
-  "name": "zpx.v2",
-  "version": "0.0.0",
+  "name": "zpx",
+  "version": "2.0.2",
+  "main": "packages/zpx.ts",
+  "unpkg": "packages/zpx.ts",
+  "types": "packages/zpx.d.ts",
+  "files": ["packages"],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
