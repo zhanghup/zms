@@ -1,13 +1,13 @@
 export interface Input{
   url: string
-  method: string
-  async: boolean
-  header: any
-  contentType: string
-  timeout: number
-  data: any
-  success: Function
-  error: Function
+  method?: string
+  async?: boolean
+  header?: any
+  contentType?: string
+  timeout?: number
+  data?: any
+  success?: Function
+  error?: Function
 }
 
 export default function Ajax({url,method = "POST",async = true,header={},contentType = "application/json",timeout = 10000, data = {},success,error}: Input){
