@@ -1,10 +1,10 @@
-import Promise from "./lib/promise"
+import Promisem from "./lib/promise"
 import zpx from "./zpx"
 import {Zpx} from "./zpx"
 
 
 export default zpx
 export {
-    Promise,
+    Promisem,
     Zpx
 }

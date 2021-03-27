@@ -25,10 +25,10 @@ zpx.SetDict([{
   values:[{name:"男",value:"1"}],
 }])
 
-const username = zpx.$v(info,"user.name")
-const sex = zpx.$v(info,"user.sex","D:A01")
-const birth = zpx.$v(info,"user.birth","T:YYYY-MM-DD")
-const c1 = zpx.$v(info,"children[0].name")
-const c2 = zpx.$v(info,"children.[0].name")
-const c3 = zpx.$v(info,`children[sub.id == "3"].name`)
+const username = zpx.val(info,"user.name")
+const sex = zpx.val(info,"user.sex","D:A01")
+const birth = zpx.val(info,"user.birth","T:YYYY-MM-DD")
+const c1 = zpx.val(info,"children[0].name")
+const c2 = zpx.val(info,"children.[0].name")
+const c3 = zpx.val(info,`children[sub.id == "3"].name`)
 </script>
