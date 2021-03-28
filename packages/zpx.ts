@@ -2,6 +2,7 @@ import toobj from "./lib/toobj";
 import Vals from './lib/vals'
 import ajax, {Input} from "./lib/ajax";
 import md5 from "./lib/md5.ts";
+import Promisem from "./lib/promisem"
 
 import DictFormat, {Dict} from "./lib/dict"
 
@@ -33,3 +34,7 @@ export class Zpx {
 
 export default new Zpx()
 
+
+export {
+    Promisem
+}

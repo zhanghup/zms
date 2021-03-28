@@ -1,4 +1,4 @@
-import Promisem from "./lib/promise"
+import Promisem from "./lib/promisem"
 import zpx from "./zpx"
 import {Zpx} from "./zpx"
 

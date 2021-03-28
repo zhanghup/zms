@@ -10,7 +10,7 @@ interface ICallback {
     onRejected: (value: any) => any
 }
 
-export default class Promise {
+export default class Promisem {
     private status: string
     private data: any
     private callbacks: ICallback[];
@@ -90,7 +90,7 @@ export default class Promise {
         const self = this;
 
         // 返回一个新的promise对象
-        return new Promise((resolve: TypeResolver, reject: TypeResolver) => {
+        return new Promisem((resolve: TypeResolver, reject: TypeResolver) => {
 
             /**
              * 调用指定回调函数处理，根据执行结果，改变return的promise的状态
@@ -105,7 +105,7 @@ export default class Promise {
                 try {
                     const result = callback(self.data);
 
-                    if (result instanceof Promise) {
+                    if (result instanceof Promisem) {
                         // result.then(
                         //     value =>resolve(value), // 当result成功时，返回的promise也成功
                         //     reason =>reject(reason)
