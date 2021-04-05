@@ -1,6 +1,6 @@
 {
   "name": "zpx",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "main": "packages/zpx.ts",
   "unpkg": "packages/zpx.ts",
   "types": "packages/zpx.d.ts",
@@ -12,7 +12,9 @@
     "build": "vite build",
     "serve": "vite preview"
   },
-  "dependencies": {},
+  "dependencies": {
+
+  },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.0",
     "@vue/compiler-sfc": "^3.0.8",

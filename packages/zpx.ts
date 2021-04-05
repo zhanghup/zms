@@ -3,54 +3,21 @@ import Vals from './lib/vals'
 import ajax, {Input} from "./lib/ajax";
 import md5 from "./lib/md5.ts";
 import Promisem from "./lib/promisem"
-import {Ref} from 'vue';
 import DictFormat, {Dict} from "./lib/dict"
-import {RouteLocationNormalizedLoaded, RouterOptions, RouteLocationRaw, NavigationFailure} from "vue-router"
-
-
-interface IRouter {
-    readonly currentRoute: Ref<RouteLocationNormalizedLoaded>;
-    readonly options: RouterOptions;
-
-    push(to: RouteLocationRaw): Promise<NavigationFailure | void | undefined>;
-
-    replace(to: RouteLocationRaw): Promise<NavigationFailure | void | undefined>;
-
-    go(delta: number): void;
-
-}
-
-interface IStore {
-    readonly state: any;
-    readonly getters: any;
-
-    dispatch(type: string, payload?: any, options?: any): Promise<any>;
-
-    commit(type: string, payload?: any, options?: any): void;
-
-    [index: string]: any
-}
-
-export interface IGraphql {
-    query?(methodfields: string, variables?: any, level?: number): Promisem
-
-    mutate?(methodfields: string, variables?: any, level?: number): Promisem
-}
+import {createStore, StoreOptions, Store} from 'vuex'
+import {createRouter, Router, RouterOptions, createWebHashHistory} from "vue-router";
 
 
 export class Zpx {
     private __vf = new Vals()
+    private __dict_init = false
     private __dict = new DictFormat()
-    private __router: IRouter
-    private __store: IStore
-    private __gqlfn: (key: string) => IGraphql;
-    private __gqlautofn: (opt: string, param?: any) => Promisem
+    private __store_init = false
+    private __store: Store<any> = createStore({})
+    private __router_init = false
+    private __router: Router = createRouter({history: createWebHashHistory(), routes: []})
 
     constructor() {
-        this.__gqlfn = (key: string) => ({})
-        this.__gqlautofn = (opt: string, param?: any) => (new Promisem((resolve => resolve())))
-        this.__router = null
-        this.__store = null
     }
 
     public val(value: any, ...keyOrFormat: string[]) {
@@ -69,34 +36,36 @@ export class Zpx {
         return toobj(input)
     }
 
-    public Router(): IRouter {
-        return this.__router
-    }
-
-    public Store(): IStore {
+    public store(): Store<any>{
+        if (!this.__router_init){
+            console.error("[zpx] vuex未初始化")
+        }
         return this.__store
     }
 
-
-    set gqlautofn(fn: (opt: string, param?: any) => Promisem) {
-        this.__gqlautofn = fn
+    public router(): Router {
+        if (!this.__router_init){
+            console.error("[zpx] vue-router未初始化")
+        }
+        return this.__router
     }
 
-    set gqlfn(fn: (key: string) => IGraphql) {
-        this.__gqlfn = fn
+    public InitStore<S>(options: StoreOptions<S>): Store<S> {
+        this.__store = createStore(options)
+        this.__store_init = true
+        return this.__store
     }
 
-    set store(store: IStore) {
-        this.__store = store
+    public InitRouter(options: RouterOptions): Router {
+        this.__router = createRouter(options)
+        this.__router_init = true
+        return this.__router
     }
 
-    set router(router: IRouter) {
-        this.__router = router
-    }
-
-    set dict(dicts: Dict[]) {
+    public SetDict(dicts: Dict[]) {
         this.__dict.SetDict(dicts)
         this.__vf.Dict(this.__dict)
+        this.__dict_init = true
     }
 }
 
