@@ -36,9 +36,12 @@ export class Zpx {
         return toobj(input)
     }
 
-    public store(): Store<any>{
-        if (!this.__router_init){
+    public store(...key: string[]): Store<any>|any{
+        if (!this.__store_init){
             console.error("[zpx] vuex未初始化")
+        }
+        if (key&&key.length > 0){
+            return this.val(this.__store.state,...key)
         }
         return this.__store
     }
