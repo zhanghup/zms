@@ -69,7 +69,8 @@ export class Zpx {
     }
 }
 
-export default new Zpx()
+let zz = new Zpx()
+export default zz
 
 
 export {
