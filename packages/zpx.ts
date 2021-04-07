@@ -65,32 +65,43 @@ export class Zpx {
         return this.__router
     }
 
-    public apollo(args: string, param?: any): IGraphql | Promisem | undefined {
+    public apo(args: string, param?: any): Promisem {
         if (!this.__apollo_client_init) {
             console.error("[zpx] apollo未初始化")
         }
         let [key, type, method, level] = args.split(":")
-        let gql: IGraphql;
         if (key == '') {
-            gql = this.__apollo_client['default']
-            if (gql == null) {
-                console.error(`【apollo】对象"default" 未初始化完成...`)
-                return
-            }
-        } else {
-            gql = this.__apollo_client[key]
-            if (gql == null) {
-                console.error(`【apollo】对象"${key}" 未初始化完成...`)
-                return
-            }
+            key = 'default'
+        }
+
+        let gql = this.__apollo_client[key]
+        if (gql == null) {
+            console.error(`【apollo】对象"${key}" 未初始化完成...`)
+            return new Promisem((resolve, reject) => reject(`【apollo】对象"${key}" 未初始化完成...`))
         }
         if (type == undefined) {
-            return gql
+            console.error(`【apollo】对象查询方法未定义...`)
+            return new Promisem((resolve, reject) => reject("【apollo】对象查询方法未定义..."))
         } else if (type == 'mutate') {
             return gql.mutate(method, param, parseInt(level || "0"))
         } else {
             return gql.query(method, param, parseInt(level || "0"))
         }
+
+    }
+
+    public apollo(name?: string): IGraphql {
+        if (!this.__apollo_client_init) {
+            console.error("[zpx] apollo未初始化")
+        }
+        if (!name) {
+            name = "default"
+        }
+        let v = this.__apollo_client[name]
+        if (!v) {
+            console.error(`【apollo】对象"${name}" 未初始化完成...`)
+        }
+        return v
     }
 
     public InitStore<S>(options: StoreOptions<S>): Store<S> {
