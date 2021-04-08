@@ -13,11 +13,6 @@ export interface IGraphql {
     mutate(methodfields: string, variables?: any, level?: number): Promisem
 }
 
-export interface GqlClient {
-    [index: string]: IGraphql
-}
-
-
 export class Zpx {
     private __vf = new Vals()
     private __dict_init = false
@@ -26,7 +21,7 @@ export class Zpx {
     private __store: Store<any> = createStore({})
     private __router_init = false
     private __router: Router = createRouter({history: createWebHashHistory(), routes: []})
-    private __apollo_client: GqlClient = {}
+    private __apollo_client = new Map<string, IGraphql>()
     private __apollo_client_init = false
 
     constructor() {
@@ -74,7 +69,7 @@ export class Zpx {
             key = 'default'
         }
 
-        let gql = this.__apollo_client[key]
+        let gql = this.__apollo_client.get(key)
         if (gql == null) {
             console.error(`【apollo】对象"${key}" 未初始化完成...`)
             return new Promisem((resolve, reject) => reject(`【apollo】对象"${key}" 未初始化完成...`))
@@ -97,9 +92,18 @@ export class Zpx {
         if (!name) {
             name = "default"
         }
-        let v = this.__apollo_client[name]
+        let v = this.__apollo_client.get(name)
         if (!v) {
             console.error(`【apollo】对象"${name}" 未初始化完成...`)
+            return new class implements IGraphql {
+                mutate(methodfields: string, variables?: any, level?: number): Promisem {
+                    return new Promisem((resolve, reject) => reject("【apollo】对象查询方法未定义..."))
+                }
+
+                query(methodfields: string, variables?: any, level?: number): Promisem {
+                    return new Promisem((resolve, reject) => reject("【apollo】对象查询方法未定义..."))
+                }
+            }
         }
         return v
     }
@@ -116,7 +120,7 @@ export class Zpx {
         return this.__router
     }
 
-    public InitApolloClient(cli: GqlClient): GqlClient {
+    public InitApolloClient(cli: Map<string, IGraphql>) {
         this.__apollo_client = cli
         this.__apollo_client_init = true
         return this.__apollo_client
