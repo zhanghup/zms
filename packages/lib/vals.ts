@@ -18,6 +18,10 @@ export default class Vals {
                 v = this.formatDict(kf.replace("D:", "").replace("dict:", ""), v)
             } else if (/^(T|time):.+$/.test(kf)) {
                 v = this.formatTime(kf.replace("T:", "").replace("time:", ""), v)
+            }else if (/^(default):.+$/.test(kf)) {
+                if (!v){
+                    v = kf.replace("default:","")
+                }
             }
         }
         return v

@@ -6,6 +6,7 @@ import Promisem from "./lib/promisem"
 import DictFormat, {Dict} from "./lib/dict"
 import {createStore, StoreOptions, Store} from 'vuex'
 import {createRouter, Router, RouterOptions, createWebHashHistory} from "vue-router";
+import mitt from 'mitt';
 
 export interface IGraphql {
     query(methodfields: string, variables?: any, level?: number): Promisem
@@ -23,6 +24,7 @@ export class Zpx {
     private __router: Router = createRouter({history: createWebHashHistory(), routes: []})
     private __apollo_client = new Map<string, IGraphql>()
     private __apollo_client_init = false
+    private emitter: mitt.Emitter = mitt();
 
     constructor() {
     }
@@ -107,6 +109,22 @@ export class Zpx {
         }
         return v
     }
+
+    /** mitt 事件总线 */
+    public emit(ty: string, data: any) {
+        this.emitter.emit(ty, data)
+    }
+    public on(ty: string,fn: any){
+        this.emitter.on(ty,fn)
+    }
+    public mittOff(ty: string,fn: any){
+        this.emitter.off(ty,fn)
+    }
+    public mittAll(){
+        return this.emitter.all()
+    }
+    /** end */
+
 
     public InitStore<S>(options: StoreOptions<S>): Store<S> {
         this.__store = createStore(options)
