@@ -111,17 +111,17 @@ export class Zpx {
     }
 
     /** mitt 事件总线 */
-    public emit(ty: string, data: any) {
+    public emit(ty: string|symbol, data: any) {
         this.emitter.emit(ty, data)
     }
-    public on(ty: string,fn: any){
+    public on(ty: string|symbol,fn: any){
         this.emitter.on(ty,fn)
     }
-    public mittOff(ty: string,fn: any){
+    public off(ty: string|symbol,fn: any){
         this.emitter.off(ty,fn)
     }
     public mittAll(){
-        return this.emitter.all()
+        return this.emitter.all
     }
     /** end */
 
