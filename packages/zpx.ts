@@ -5,7 +5,8 @@ import md5 from "./lib/md5.ts";
 import Promisem from "./lib/promisem"
 import DictFormat, {Dict} from "./lib/dict"
 import {createStore, StoreOptions, Store} from 'vuex'
-import {createRouter, Router, RouterOptions, createWebHashHistory} from "vue-router";
+import {createRouter, Router, RouterOptions, createWebHashHistory,RouteLocationNormalizedLoaded} from "vue-router";
+import {Ref} from "vue"
 import mitt from 'mitt';
 
 export interface IGraphql {
@@ -60,6 +61,12 @@ export class Zpx {
             console.error("[zpx] vue-router未初始化")
         }
         return this.__router
+    }
+    public route(): Ref<RouteLocationNormalizedLoaded>{
+        if (!this.__router_init) {
+            console.error("[zpx] vue-router未初始化")
+        }
+        return this.__router.currentRoute
     }
 
     public apo(args: string, param?: any): Promisem {
