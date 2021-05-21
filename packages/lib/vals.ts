@@ -13,7 +13,7 @@ export default class Vals {
 
         let v = value
         for (let kf of keyOrFormat) {
-            if (/^[0-9a-zA-Z_.$\[\]\s><='"]+$/.test(kf)) {
+            if (/^[0-9a-zA-Z_\-.$\[\]\s><='"]+$/.test(kf)) {
                 v = this.$value(kf, v)
             } else if (/^(D|dict):([0-9a-zA-Z]+)$/.test(kf)) {
                 v = this.formatDict(kf.replace("D:", "").replace("dict:", ""), v)
