@@ -3,7 +3,7 @@ import Vals from './lib/vals'
 import ajax, {Input} from "./lib/ajax";
 import md5 from "./lib/md5.ts";
 import Promisem from "./lib/promisem"
-import DictFormat, {Dict} from "./lib/dict"
+import DictFormat, {Dict, DictItem} from "./lib/dict"
 import {createStore, StoreOptions, Store} from 'vuex'
 import {createRouter, Router, RouterOptions, createWebHashHistory, RouteLocationNormalizedLoaded} from "vue-router";
 import {Ref} from "vue"
@@ -39,6 +39,14 @@ export class Zpx {
 
     public obj(input: any) {
         return toobj(input)
+    }
+
+    public dict(key: string): Dict {
+        return this.__dict.Dict(key)
+    }
+
+    public dictitem(key: string): DictItem[] {
+        return this.__dict.DictItems(key)
     }
 
     public SetDict(dicts: Dict[]) {

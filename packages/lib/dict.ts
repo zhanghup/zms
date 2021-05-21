@@ -14,6 +14,16 @@ export default class DictFormat {
         return o.name
     }
 
+    public Dict(key: string): Dict {
+        return this.dictmap[key]
+    }
+
+    public DictItems(key: string): DictItem[] {
+        let dict = this.Dict(key)
+        if (!dict) return []
+        return dict.values
+    }
+
     public SetDict(dicts: Dict[]) {
         this.dicts = dicts
         this.dictmap = {}
