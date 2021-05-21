@@ -25,6 +25,12 @@ export default class Vals {
                 }
             }else if (/^(map):.+$/.test(kf)) {
                 v = this.formatMap(kf.replace("map:", ""),String(v))
+            }else if (/^(split):.+$/.test(kf)) {
+                v = this.formatSplit(kf.replace("split:", ""),String(v))
+            }else if (/^(join):.+$/.test(kf)) {
+                v = this.formatJoin(kf.replace("join:", ""),v)
+            }else if (/^(toDate):.+$/.test(kf)) {
+                v = this.formatToDate(kf.replace("toDate:", ""),Number(v))
             }
         }
         return v
@@ -187,6 +193,30 @@ export default class Vals {
         if (value == null) {
             return value
         }
+    }
+
+    /**
+     * split:, used to "1,2,3" => ["1","2","3"]
+     */
+    private formatSplit(opt: string, value: string) {
+        return value.split(opt)
+    }
+
+    /**
+     * join:, used to ["1","2","3"] => "1,2,3"
+     */
+    private formatJoin(opt: string, value: string[]) {
+        return value.join(opt)
+    }
+
+    /**
+     *
+     */
+    private formatToDate(opt: string, value: number) {
+        if (!value && value !== 0){
+            return new Date()
+        }
+        return new Date(value * 1000)
     }
 
     public Dict(dict: DictFormat) {
