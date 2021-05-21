@@ -199,6 +199,9 @@ export default class Vals {
      * split:, used to "1,2,3" => ["1","2","3"]
      */
     private formatSplit(opt: string, value: string) {
+        if (value.trim() === ""){
+            return []
+        }
         return value.split(opt)
     }
 
