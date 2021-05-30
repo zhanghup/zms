@@ -23,14 +23,16 @@ export default class Vals {
                 if (!v) {
                     v = kf.replace("default:", "")
                 }
-            }else if (/^(map):.+$/.test(kf)) {
-                v = this.formatMap(kf.replace("map:", ""),String(v))
-            }else if (/^(split):.+$/.test(kf)) {
-                v = this.formatSplit(kf.replace("split:", ""),String(v))
-            }else if (/^(join):.+$/.test(kf)) {
-                v = this.formatJoin(kf.replace("join:", ""),v)
-            }else if (/^(toDate):.+$/.test(kf)) {
-                v = this.formatToDate(kf.replace("toDate:", ""),Number(v))
+            } else if (/^(map):.+$/.test(kf)) {
+                v = this.formatMap(kf.replace("map:", ""), String(v))
+            } else if (/^(split):.+$/.test(kf)) {
+                v = this.formatSplit(kf.replace("split:", ""), String(v))
+            } else if (/^(join):.+$/.test(kf)) {
+                v = this.formatJoin(kf.replace("join:", ""), v)
+            } else if (/^(toDate):.+$/.test(kf)) {
+                v = this.formatToDate(kf.replace("toDate:", ""), Number(v))
+            } else if (/^(smap):.+$/.test(kf)) {
+                v = this.formatSmap(kf.replace("smap:", ""), v)
             }
         }
         return v
@@ -196,10 +198,25 @@ export default class Vals {
     }
 
     /**
+     * smap:id used to [{id:1,name:"123"},{id:2,name:"321"}] => [1,2]
+     */
+    private formatSmap(opt: string, value: any) {
+        if (value == null) {
+            return value
+        }
+
+        if (value instanceof Array) {
+            return value.map(r => this.$value(opt, r))
+        } else {
+            return value
+        }
+    }
+
+    /**
      * split:, used to "1,2,3" => ["1","2","3"]
      */
     private formatSplit(opt: string, value: string) {
-        if (value.trim() === ""){
+        if (value.trim() === "") {
             return []
         }
         return value.split(opt)
@@ -216,7 +233,7 @@ export default class Vals {
      *
      */
     private formatToDate(opt: string, value: number) {
-        if (!value && value !== 0){
+        if (!value && value !== 0) {
             return new Date()
         }
         return new Date(value * 1000)
