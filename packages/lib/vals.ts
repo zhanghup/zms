@@ -181,11 +181,19 @@ export default class Vals {
         return opt;
     }
 
-    private formatDict(opt: string, value: string) {
+    private formatDict(opt: string, value: string | string[]) {
         if (value == null) {
             return null;
         }
-        return this.dict.GetName(opt, value)
+        if (typeof value == 'string') {
+            return this.dict.GetName(opt, value)
+        } else {
+            let result = []
+            for (let o of value) {
+                result.push(this.dict.GetName(opt, o))
+            }
+            return result
+        }
     }
 
     /**
