@@ -2,14 +2,14 @@ export default class DictFormat {
     private dicts: Dict[] = []
     private dictmap: DictMapIndx = {}
 
-    public GetName(key: string, value: string): string | null | undefined {
+    public GetName(key: string, value: string): string {
         let dict = this.dictmap[key]
-        if (!dict) return null
+        if (!dict) return value
         let values = dict.values
-        if (!values || values.length == 0) return null
+        if (!values || values.length == 0) return value
         let o = values.find(r => r.value == value)
         if (!o) {
-            return null
+            return value
         }
         return o.name
     }

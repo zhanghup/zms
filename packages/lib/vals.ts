@@ -24,18 +24,22 @@ export default class Vals {
                     v = kf.replace("default:", "")
                 }
             } else if (/^(map):.+$/.test(kf)) {
-                v = this.formatMap(kf.replace("map:", ""), String(v))
+                v = this.formatMap(kf.replace("map:", ""), v)
             } else if (/^(split):.+$/.test(kf)) {
-                v = this.formatSplit(kf.replace("split:", ""), String(v))
+                v = this.formatSplit(kf.replace("split:", ""), v)
             } else if (/^(join):.+$/.test(kf)) {
                 v = this.formatJoin(kf.replace("join:", ""), v)
             } else if (/^(toDate):.+$/.test(kf)) {
-                v = this.formatToDate(kf.replace("toDate:", ""), Number(v))
+                v = this.formatToDate(kf.replace("toDate:", ""), v)
             } else if (/^(smap):.+$/.test(kf)) {
                 v = this.formatSmap(kf.replace("smap:", ""), v)
             }
         }
         return v
+    }
+
+    public default(): string {
+        return "____default____"
     }
 
     /**
@@ -130,10 +134,22 @@ export default class Vals {
         return null;
     }
 
-    private formatTime(opt: string, value: number) {
+    /**
+     * 没有匹配到，就返回原值
+     */
+    private formatTime(opt: string, value: any) {
         if (value == null) {
             return null;
         }
+
+        if (!(typeof value == 'number')) {
+            return value
+        }
+
+        if (value < 100) {
+            return value
+        }
+
         let t = null;
         if ((value + "").length == 10) {
             t = new Date(value * 1000);
@@ -181,6 +197,9 @@ export default class Vals {
         return opt;
     }
 
+    /**
+     * 没有匹配到，就返回原值
+     */
     private formatDict(opt: string, value: string | string[]) {
         if (value == null) {
             return null;
@@ -197,12 +216,43 @@ export default class Vals {
     }
 
     /**
-     * "1:正确,2:错误"
+     * 没有匹配到，就返回原值
+     *
+     * "1:正确,2:错误,____default____:11"
      */
-    private formatMap(opt: string, value: string) {
+    private formatMap(opt: string, value: any) {
         if (value == null) {
             return value
         }
+
+        var vv = ""
+
+        if (typeof value == 'string' || typeof value == 'number' || typeof value == 'boolean') {
+            vv = value + ""
+        } else {
+            return value
+        }
+
+        let mp: Record<string, string> = {}
+
+        for (let o of opt.split(",")) {
+            let oo = o.split(":")
+            if (oo.length != 2) {
+                return value
+            }
+            mp[oo[0]] = oo[1]
+        }
+
+        let v = mp[vv]
+        if (v == undefined) {
+            v = mp[this.default()]
+        }
+
+        if (v == undefined) {
+            return value
+        }
+
+        return v
     }
 
     /**
