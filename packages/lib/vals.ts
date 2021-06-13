@@ -30,7 +30,7 @@ export default class Vals {
             } else if (/^(join):.+$/.test(kf)) {
                 v = this.formatJoin(kf.replace("join:", ""), v)
             } else if (/^(toDate):.+$/.test(kf)) {
-                v = this.formatToDate(kf.replace("toDate:", ""), v)
+                v = this.formatDate(kf.replace("toDate:", ""), v)
             } else if (/^(smap):.+$/.test(kf)) {
                 v = this.formatSmap(kf.replace("smap:", ""), v)
             }
@@ -290,11 +290,44 @@ export default class Vals {
     /**
      *
      */
-    private formatToDate(opt: string, value: number) {
-        if (!value && value !== 0) {
-            return new Date()
+    private formatDate(opt: string, value: any) {
+        if (opt == "toDate") {
+            if (typeof value == 'number') {
+                if (!value && value !== 0) {
+                    return new Date()
+                }
+                return new Date(value * 1000)
+            } else if (value instanceof Array) {
+                let result = []
+                for (let o of value) {
+                    if (typeof o == 'number') {
+                        if (!o && o !== 0) {
+                            result.push(new Date())
+                        } else {
+                            new Date(o * 1000)
+                        }
+                    } else {
+                        result.push(o)
+                    }
+                }
+            }
         }
-        return new Date(value * 1000)
+
+        if (opt == "toUnix") {
+            if (value instanceof Date) {
+                return parseInt(value.getTime() / 1000 + "")
+            } else if (value instanceof Array) {
+                let result = []
+                for (let o of value) {
+                    if (o instanceof Date) {
+                        result.push(parseInt(o.getTime() / 1000 + ""))
+                    } else {
+                        result.push(o)
+                    }
+                }
+            }
+        }
+
     }
 
     public Dict(dict: DictFormat) {
