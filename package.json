@@ -1,6 +1,6 @@
 {
   "name": "zpx",
-  "version": "2.0.26",
+  "version": "2.0.27",
   "main": "packages/zpx.ts",
   "unpkg": "packages/zpx.ts",
   "types": "packages/zpx.d.ts",

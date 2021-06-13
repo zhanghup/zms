@@ -29,8 +29,8 @@ export default class Vals {
                 v = this.formatSplit(kf.replace("split:", ""), v)
             } else if (/^(join):.+$/.test(kf)) {
                 v = this.formatJoin(kf.replace("join:", ""), v)
-            } else if (/^(toDate):.+$/.test(kf)) {
-                v = this.formatDate(kf.replace("toDate:", ""), v)
+            } else if (/^(date):.+$/.test(kf)) {
+                v = this.formatDate(kf.replace("date:", ""), v)
             } else if (/^(smap):.+$/.test(kf)) {
                 v = this.formatSmap(kf.replace("smap:", ""), v)
             }
