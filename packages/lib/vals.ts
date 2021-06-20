@@ -310,6 +310,7 @@ export default class Vals {
                         result.push(o)
                     }
                 }
+                return result
             }
         }
 
@@ -325,6 +326,7 @@ export default class Vals {
                         result.push(o)
                     }
                 }
+                return result
             }
         }
 
