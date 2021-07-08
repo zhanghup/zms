@@ -1,6 +1,6 @@
 {
   "name": "zpx",
-  "version": "2.0.28",
+  "version": "2.0.30",
   "main": "packages/zpx.ts",
   "unpkg": "packages/zpx.ts",
   "types": "packages/zpx.d.ts",
@@ -8,8 +8,8 @@
     "packages"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --host",
+    "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview"
   },
   "dependencies": {

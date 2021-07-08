@@ -1,7 +1,7 @@
 import toobj from "./lib/toobj";
 import Vals from './lib/vals'
 import ajax, {Input} from "./lib/ajax";
-import md5 from "./lib/md5.ts";
+import md5 from "./lib/md5";
 import Promisem from "./lib/promisem"
 import DictFormat, {Dict, DictItem} from "./lib/dict"
 import {createStore, StoreOptions, Store} from 'vuex'
@@ -166,7 +166,7 @@ export class Zpx {
 
 
     /** mitt 事件总线 */
-    private emitter: mitt.Emitter = mitt();
+    private emitter = mitt();
 
     public emit(ty: string | symbol, data: any) {
         this.emitter.emit(ty, data)
